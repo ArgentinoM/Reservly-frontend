@@ -1,0 +1,71 @@
+<form class="space-y-4"
+  [formGroup]="filterForm"
+  (ngSubmit)="onSave()">
+
+  <!-- categorias -->
+  <div>
+    <label class="block text-sm mb-2">Categoría</label>
+
+    <select class="w-full bg-tercery p-2 rounded-md cursor-pointer"
+      formControlName="category">
+
+      @for (item of categoriesResource.value()?.data; track item.id) {
+      <option [ngValue]="item.id">{{ item.name }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Nombre -->
+  <div>
+    <label class="block text-sm mb-2">Nombre</label>
+    <input type="text"
+      class="w-full p-2 rounded-md bg-tercery"
+      placeholder="Escribe un nombre"
+      formControlName="name" />
+
+  </div>
+
+  <!-- Precio minimo -->
+  <div>
+    <label class="block text-sm mb-2">Precio mínimo</label>
+    <input type="number"
+      class="w-full p-2 rounded-md bg-tercery"
+      formControlName="price_min"
+      [value]="100" />
+  </div>
+
+  <!-- Precio máximo -->
+  <div>
+    <label class="block text-sm mb-2">Precio máximo</label>
+    <input type="number"
+      class="w-full p-2 rounded-md bg-tercery"
+      formControlName="price_max"
+      [value]="100" />
+  </div>
+
+  <!-- Duracion -->
+  <div>
+    <label class="block text-sm mb-2">Duración</label>
+    <select class="w-full bg-tercery p-2 rounded-md cursor-pointer"
+      formControlName="duration">
+      <option value="0-30">0-30 min</option>
+      <option value="30-60">30-60 min</option>
+      <option value="60+">Más de 60 min</option>
+    </select>
+  </div>
+
+  <!-- Fecha -->
+  <div>
+    <label class="block text-sm mb-2">Fecha</label>
+    <select class="w-full bg-tercery p-2 rounded-md cursor-pointer"
+      formControlName="date">
+      <option value="recent">Más reciente</option>
+      <option value="old">Más antiguo</option>
+    </select>
+  </div>
+
+  <button type="submit"
+    class="w-full bg-primary text-text-primary cursor-pointer py-2 rounded-md hover:bg-accent transition">
+    Aplicar filtros
+  </button>
+</form>

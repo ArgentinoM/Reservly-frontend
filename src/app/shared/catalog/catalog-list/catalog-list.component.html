@@ -1,0 +1,45 @@
+<div
+  class="bg-secondary rounded-md overflow-hidden shadow-md border border-tercery duration-[.5s] hover:shadow-primary/50 hover:shadow-2xl transition">
+  <!-- img -->
+  <div class="relative">
+    <img [src]="ServiceImgUrl()"
+      alt="Video"
+      class="h-40 w-full object-cover"
+      loading="lazy" />
+    <i
+      class="fa-regular fa-heart absolute top-3 right-3 text-text-primary cursor-pointer hover:text-primary transition"></i>
+  </div>
+
+  <!-- info -->
+  <div class="p-4 flex flex-col gap-2">
+    <h3 class="font-semibold text-text-primary">{{ServiceName()}}</h3>
+    <p class="text-sm text-gray-400">{{ServiceDesc()}}</p>
+
+    <!-- ⭐ Calificación -->
+    <div class="flex items-center text-yellow-400 gap-[2px]">
+
+      <!-- @for (item of items; track $index) {} -->
+
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-regular fa-star"></i>
+
+      <span class="ml-1 text-sm text-gray-400">
+        @if(RatingAverage()){
+        ({{RatingTotal()}})
+        }@else {
+        (0)
+        }
+      </span>
+    </div>
+
+    <span class="text-success font-medium">MX{{ServicePrice() | currency}}</span>
+
+    <button [routerLink]="['/service/' + ServiceId()]"
+      class="bg-primary text-text-primary py-1 rounded-md hover:bg-accent transition">
+      Más info
+    </button>
+  </div>
+</div>

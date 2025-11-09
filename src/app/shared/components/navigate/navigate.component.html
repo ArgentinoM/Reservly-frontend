@@ -1,0 +1,62 @@
+<nav class="bg-secondary overflow-y-hidden w-full flex justify-between items-center px-8 h-20 shadow-md relative z-50">
+  <!-- Logo -->
+  <div class="inline-flex items-center">
+    <a routerLink="/"
+      class="text-2xl font-bold text-primary">Reservly</a>
+  </div>
+
+  <!-- list -->
+
+  @if (authService.authStatus() === 'authenticated') {
+  <div class="flex gap-8">
+
+    @for (item of itemsMenu(); track item) {
+
+    <div class="">
+      <a [routerLink]="[item.path]"
+        class="text-text-primary font-medium hover:text-primary transition duration-[.5s]">
+        {{item.name}}
+      </a>
+    </div>
+
+    }
+  </div>
+  }
+
+
+  <!-- autenthitication -->
+
+  @if (authService.authStatus() === 'not-authenticated') {
+  <!-- Buttons -->
+  <button class="cursor-pointer py-2 px-6 rounded-2xl border-[1px] transition-all duration-[.5s]
+   hover:shadow-primary hover:shadow-2xl hover:text-accent"
+    [routerLink]="['auth/login']">
+    Accesso
+  </button>
+  }
+
+  <!-- user -->
+  @if (authService.authStatus() === 'authenticated') {
+  <div class="relative "
+    #dropdownContainer>
+    <button (click)="toggleDropdown()"
+      class="flex items-center gap-2 border cursor-pointer border-tercery rounded-full px-3 py-1 hover:shadow-2xl transition duration-300">
+      <img src="https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg"
+        alt="perfil"
+        class="w-9 h-9 rounded-full object-cover" />
+      <span class="font-medium text-text-primary">Argentino</span>
+      <i class="fa-solid fa-chevron-down text-sm text-text-primary"></i>
+    </button>
+
+    <!-- Dropdown -->
+    @if (dropdownOpen()) {
+    <div
+      class="absolute right-0 mt-3 w-48 bg-secondary rounded-xl shadow-2xl border border-tercery py-2 overflow-hidden z-50 transition-all duration-300">
+      <button class="w-full text-left px-4 py-3 text-text-primary hover:bg-error/20 transition">Cerrar sesión</button>
+    </div>
+    }
+
+  </div>
+  }
+
+</nav>

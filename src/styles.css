@@ -1,1 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+
+  --color-primary: #38BDF8;
+  --color-secondary: #1E293B;
+  --color-tercery: #0F172A;
+  --color-accent: #67E8F9;
+  --color-text-primary: #E2E8F0;
+
+
+  --color-success: #34D399;
+  --color-error: #F87171;
+  --color-warning: #FBBF24;
+
+  --font-family-manrope: 'Manrope', sans-serif;
+
+  --animate-fade-in: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@utility animate-fadeIn {
+  animation: var(--animate-fade-in);
+}
+
+
+body {
+  font-family: var(--font-family-manrope);
+  background-color: var(--color-tercery);
+  color: var(--color-text-primary);
+}

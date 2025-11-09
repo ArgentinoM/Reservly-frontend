@@ -1,0 +1,14 @@
+<div class="grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 mt-6">
+
+  @for (service of data().value()?.data?.data; track service) {
+
+  <catalog-list [ServiceName]="service.name"
+    [ServiceDesc]="service.desc"
+    [ServicePrice]="service.price"
+    [ServiceImgUrl]="service.img"
+    [ServiceId]="service.id"
+    [RatingAverage]="service.rating.average_rating"
+    [RatingTotal]="service.rating.total_reviews" />
+  }
+
+</div>
