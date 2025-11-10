@@ -19,6 +19,7 @@ export class AuthService {
   private _authStatus = signal<AuthStatus>('checking');
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(localStorage.getItem('token'));
+
   private http = inject(HttpClient);
 
   checkStatusResource = rxResource({
@@ -33,12 +34,10 @@ export class AuthService {
     }
 
     return 'not-authenticated';
-
   });
 
   user = computed(() => this._user());
   token = computed(this._token);
-  rolId = computed(() => this._user()?.rol.id);
 
   login(email: string, password: string): Observable<boolean> {
     return this.http
@@ -53,8 +52,17 @@ export class AuthService {
   }
 
   checkStatus(): Observable<boolean> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.logout();
+      return of(false);
+    }
+
     return this.http
       .get<AuthResponse>(`${baseUrl}/${verifyEndpoint}`, {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
       })
       .pipe(
         map((resp) => this.handleAuthSuccess(resp)),
@@ -70,12 +78,8 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-
   private handleAuthSuccess({ token, data }: AuthResponse) {
-
-    const user = data[0]
-
-    this._user.set(user);
+    this._user.set(data);
     this._authStatus.set('authenticated');
     this._token.set(token);
 

@@ -2,6 +2,6 @@ import { User } from "./user";
 
 export interface AuthResponse {
   message: string;
-  data:    User[];
+  data:    User;
   token:   string;
 }

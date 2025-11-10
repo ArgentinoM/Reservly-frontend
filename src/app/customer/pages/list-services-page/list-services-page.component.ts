@@ -15,17 +15,17 @@ import { Filter } from '../../../shared/filter/filter.interface';
 export class ListServicesPageComponent {
   isFilterOpen = signal(false);
   catalogService = inject(CatalogService);
-  filters = signal<Filter>({});
+  // filters = signal<Filter>({});
   paginateService = inject(PaginateService);
 
   toggleFilter(): void {
     this.isFilterOpen.update(currentValue => !currentValue);
   }
 
-  onFiltersChanged(filters: Filter) {
-    console.log('Filtros recibidos:', filters);
-    this.filters.set(filters);
-  }
+  // onFiltersChanged(filters: Filter) {
+  //   console.log('Filtros recibidos:', filters);
+  //   this.filters.set(filters);
+  // }
 
   catalogResource = rxResource({
     request: () => ({
@@ -34,10 +34,6 @@ export class ListServicesPageComponent {
     loader: ({ request }) => {
       return this.catalogService.getServices({
         page: request.page,
-        category: this.filters().category ?? undefined,
-        price_max: this.filters().price_max ?? undefined,
-        price_min: this.filters().price_min ?? undefined,
-        name: this.filters().name ?? undefined,
       });
     }
   });

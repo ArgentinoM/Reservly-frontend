@@ -21,7 +21,7 @@ export class LoginPageComponent{
   hasError = signal(false);
   isPosting = signal(false);
 
-  rol_id = this.authService.rolId
+  // rol_id = this.authService.rolId
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -41,13 +41,15 @@ export class LoginPageComponent{
 
     this.authService.login(email, password).subscribe((isAuthenticated) => {
       if(isAuthenticated){
-        if(this.rol_id() === 1){
-          this.router.navigateByUrl('/seller');
-        }
+        // if(this.rol_id() === 1){
+        //   this.router.navigateByUrl('/seller');
+        // }
 
-        if(this.rol_id() === 2){
-          this.router.navigateByUrl('/');
-        }
+        // if(this.rol_id() === 2){
+        //   this.router.navigateByUrl('/');
+        // }
+
+        this.router.navigateByUrl('/');
         return;
       }
 

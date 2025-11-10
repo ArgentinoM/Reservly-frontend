@@ -8,12 +8,12 @@ import { Catalog } from '../../shared/catalog/interfaces/response-catalog.interf
 interface Options {
   page?: number;
   perPage?: number;
-  category?: number;
-  price_min?: number;
-  price_max?: number;
+  // category?: number;
+  // price_min?: number;
+  // price_max?: number;
   // duration?: number;
   // date?: string;
-  name?: string;
+  // name?: string;
 }
 
 @Injectable({
