@@ -17,4 +17,10 @@ export class PaginationComponent {
     return Array.from({length: this.page()}, (_, i) => i + 1)
   })
 
+  goToPage(page: number) {
+  if (page < 1 || page > this.page()) return;
+
+  this.activePage.set(page);
+}
+
 }

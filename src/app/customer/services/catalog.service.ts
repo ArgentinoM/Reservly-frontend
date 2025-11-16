@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { Observable, of, tap } from 'rxjs';
-import {  PaginatedApiResponse } from '../../core/interfaces/respose-paginate.interface';
-import { Catalog } from '../../shared/catalog/interfaces/response-catalog.interface';
+import { Catalog } from '../interfaces/response-catalog.interface';
+import { PaginateResponse } from '../../core/interfaces/respose-paginate.interface';
+import { ApiResponse } from '../../core/interfaces/response.interface';
 
 interface Options {
   page?: number;
@@ -21,36 +22,52 @@ interface Options {
 })
 export class CatalogService {
 
+  private _totalServices = signal<number>(0);
+
   private http = inject(HttpClient);
   private baseUrl = environment.url_base;
   private getServicesEndpoint = environment.getServices_endpoint;
 
-  private catalogCache = new Map<string, PaginatedApiResponse<Catalog>>();
+  private catalogCache = new Map<string, PaginateResponse<Catalog>>();
+  private catalogIdCache = new Map<string, ApiResponse<Catalog>>();
 
-getServices(options: Options): Observable<PaginatedApiResponse<Catalog>> {
-   const {
-    perPage = 20,
-    page = 0,
-  } = options;
-
-   const key = `${page}-${perPage}`;
-
-   if(this.catalogCache.has(key)){
-    return of(this.catalogCache.get(key)!);
-   }
-
-  return this.http.get<PaginatedApiResponse<Catalog>>(
-    `${this.baseUrl}/${this.getServicesEndpoint}`,
-    {
-      params: {
-        perPage,
-        page,
-      },
-    }
-  ).pipe(
-    tap(x => console.log('Respuesta recibida del backend:', x)),
-    tap(resp => this.catalogCache.set(key, resp))
+  total = computed(() =>
+    this._totalServices()
   );
-}
+
+
+  getServices(options: Options): Observable<PaginateResponse<Catalog>> {
+    const {
+      perPage = 20,
+      page = 0,
+    } = options;
+
+    const key = `${page}-${perPage}`;
+
+    if(this.catalogCache.has(key)){
+      return of(this.catalogCache.get(key)!);
+    }
+
+    return this.http.get<PaginateResponse<Catalog>>(
+      `${this.baseUrl}/${this.getServicesEndpoint}`,
+      {
+        params: {
+          perPage,
+          page,
+        },
+      }
+    ).pipe(
+      tap((resp) => this._totalServices.set(resp.meta.total)),
+      tap(resp => this.catalogCache.set(key, resp))
+    );
+  }
+
+  getServicesById(id: number): Observable<ApiResponse<Catalog>>{
+
+    return this.http.get<ApiResponse<Catalog>>(`${this.baseUrl}/${this.getServicesEndpoint}/${id}`)
+    .pipe(
+      tap((resp) => this.catalogIdCache.set( 'service' , resp))
+    )
+  }
 
 }

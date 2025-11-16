@@ -1,26 +1,12 @@
-import { ApiResponse } from "./response.interface";
-
-export interface Paginate <T>{
-  current_page:   number;
-  data:             T;
-  first_page_url: string;
-  from:           number;
-  last_page:      number;
-  last_page_url:  string;
-  links:          Link[];
-  next_page_url:  string;
-  path:           string;
-  per_page:       number;
-  prev_page_url:  null;
-  to:             number;
-  total:          number;
+export interface PaginateResponse<T> {
+  message: string;
+  data:    T[];
+  meta:    Meta;
+}
+export interface Meta {
+  current_page: number;
+  last_page:    number;
+  per_page:     number;
+  total:        number;
 }
 
-export interface Link {
-  url:    null | string;
-  label:  string;
-  page:   number | null;
-  active: boolean;
-}
-
-export type PaginatedApiResponse<T> = ApiResponse<Paginate<T[]>>;

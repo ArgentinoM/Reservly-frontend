@@ -1,38 +1,52 @@
-<nav class="bg-secondary overflow-y-hidden w-full flex justify-between items-center px-8 h-20 shadow-md relative z-50">
-  <!-- Logo -->
+<nav class="bg-secondary  w-full flex justify-between items-center px-8 h-20 shadow-md relative z-50">
+
   <div class="inline-flex items-center">
-    <a routerLink="/"
+    <a [routerLink]="['./']"
       class="text-2xl font-bold text-primary">Reservly</a>
   </div>
 
   <!-- list -->
 
-  @if (authService.authStatus() === 'authenticated') {
-  <div class="flex gap-8">
+  @if (itemsMenu() !== null) {
+  <nav class="flex gap-6">
 
-    @for (item of itemsMenu(); track item) {
+    @for (item of itemsMenu(); track item.path) {
 
-    <div class="">
+    <div>
+
+
       <a [routerLink]="[item.path]"
+        routerLinkActive="text-primary scale-105"
+        [routerLinkActiveOptions]="{ exact: true }"
         class="text-text-primary font-medium hover:text-primary transition duration-[.5s]">
-        {{item.name}}
+        {{ item.name | titlecase }}
       </a>
     </div>
 
     }
-  </div>
+
+  </nav>
   }
 
 
   <!-- autenthitication -->
-
   @if (authService.authStatus() === 'not-authenticated') {
   <!-- Buttons -->
-  <button class="cursor-pointer py-2 px-6 rounded-2xl border-[1px] transition-all duration-[.5s]
-   hover:shadow-primary hover:shadow-2xl hover:text-accent"
-    [routerLink]="['auth/login']">
-    Accesso
-  </button>
+
+  <div class="flex gap-4">
+    <button class="cursor-pointer text-black bg-success py-2 px-6 rounded-2xl border-[1px] transition-all duration-[.5s]
+    hover:bg-success/70 hover:text-white"
+      [routerLink]="['auth/login']">
+      Accesso
+    </button>
+
+    <button class="cursor-pointer py-2 px-6 rounded-2xl border-[1px] transition-all duration-[.5s]
+   hover:text-accent"
+      [routerLink]="['auth/register']">
+      Crear cuenta
+    </button>
+  </div>
+
   }
 
   <!-- user -->
@@ -41,10 +55,13 @@
     #dropdownContainer>
     <button (click)="toggleDropdown()"
       class="flex items-center gap-2 border cursor-pointer border-tercery rounded-full px-3 py-1 hover:shadow-2xl transition duration-300">
-      <img src="https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg"
+      <img
+        [src]="authService.user()?.img ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
         alt="perfil"
         class="w-9 h-9 rounded-full object-cover" />
-      <span class="font-medium text-text-primary">Argentino</span>
+      <span class="font-medium text-text-primary">
+        {{authService.user()?.name}}
+      </span>
       <i class="fa-solid fa-chevron-down text-sm text-text-primary"></i>
     </button>
 
@@ -52,7 +69,17 @@
     @if (dropdownOpen()) {
     <div
       class="absolute right-0 mt-3 w-48 bg-secondary rounded-xl shadow-2xl border border-tercery py-2 overflow-hidden z-50 transition-all duration-300">
-      <button class="w-full text-left px-4 py-3 text-text-primary hover:bg-error/20 transition">Cerrar sesión</button>
+
+      <button [routerLink]="['/perfil']"
+        class="w-full cursor-pointer text-left px-4 py-3 text-text-primary hover:bg-accent/20 transition">
+        Ver perfil
+      </button>
+
+      <button (click)="authService.logout()"
+        class="w-full cursor-pointer text-left px-4 py-3 text-text-primary hover:bg-accent/20 transition">
+        Cerrar sesión
+      </button>
+
     </div>
     }
 

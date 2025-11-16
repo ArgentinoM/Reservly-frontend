@@ -2,14 +2,16 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { User } from '../interfaces/user';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { AuthResponse } from '../interfaces/auth-response';
 import { rxResource } from '@angular/core/rxjs-interop'
 
 type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated'
 const baseUrl = environment.url_base;
 const loginEndpoint =  environment.login_endpoint;
+const registerEndpoint =  environment.register_endpoint;
 const verifyEndpoint =  environment.verifyCode_endpoint;
+const logoutEndpoint =  environment.logout_endpoint;
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +21,6 @@ export class AuthService {
   private _authStatus = signal<AuthStatus>('checking');
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(localStorage.getItem('token'));
-
   private http = inject(HttpClient);
 
   checkStatusResource = rxResource({
@@ -38,6 +39,16 @@ export class AuthService {
 
   user = computed(() => this._user());
   token = computed(this._token);
+  isSeller = computed(() => this._user()?.rol.name.includes('seller') ?? false);
+
+   register(data: any): Observable<boolean> {
+    return this.http.post(`${baseUrl}/${registerEndpoint}`, data).pipe(
+      map(() => true),
+      catchError((error) => {
+      return throwError(() => error.error);
+      })
+    );
+  }
 
   login(email: string, password: string): Observable<boolean> {
     return this.http
@@ -59,11 +70,7 @@ export class AuthService {
     }
 
     return this.http
-      .get<AuthResponse>(`${baseUrl}/${verifyEndpoint}`, {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
-      })
+      .get<AuthResponse>(`${baseUrl}/${verifyEndpoint}`)
       .pipe(
         map((resp) => this.handleAuthSuccess(resp)),
         catchError((error: any) => this.handleAuthError(error))
@@ -71,6 +78,7 @@ export class AuthService {
   }
 
   logout() {
+
     this._user.set(null);
     this._token.set(null);
     this._authStatus.set('not-authenticated');

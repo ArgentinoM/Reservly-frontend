@@ -1,9 +1,11 @@
 <ul class="flex justify-center gap-1 text-gray-900 dark:text-white">
+
+  <!-- back button -->
   <li>
-    <a [routerLink]="[]"
-      [queryParams]="{ page: currenPage() - 1 }"
-      (click)="activePage.set(currenPage() - 1)"
-      class="grid size-8 place-content-center rounded border border-gray-700 transition-colors hover:bg-gray-800 rtl:rotate-180 "
+    <a [routerLink]="currenPage() > 1 ? [] : null"
+      [queryParams]="currenPage() > 1 ? { page: currenPage() - 1 } : null"
+      (click)="goToPage(currenPage() - 1)"
+      class="grid size-8 place-content-center rounded border border-gray-700 transition-colors hover:bg-gray-800 rtl:rotate-180"
       [class.opacity-50]="currenPage() === 1"
       [class.cursor-not-allowed]="currenPage() === 1"
       aria-label="Previous page">
@@ -17,6 +19,7 @@
       </svg>
     </a>
   </li>
+
 
   @for (page of getPagesList(); track page) {
   <li>
@@ -32,10 +35,11 @@
   }
 
 
+  <!-- next button -->
   <li>
-    <a [routerLink]="[]"
-      [queryParams]="{ page: currenPage() + 1 }"
-      (click)="activePage.set(currenPage() + 1)"
+    <a [routerLink]="currenPage() < page() ? [] : null"
+      [queryParams]="currenPage() < page() ? { page: currenPage() + 1 } : null"
+      (click)="goToPage(currenPage() + 1)"
       class="grid size-8 place-content-center rounded border border-gray-200 transition-colors hover:bg-gray-50 rtl:rotate-180 dark:border-gray-700 dark:hover:bg-gray-800"
       [class.opacity-50]="currenPage() === page()"
       [class.cursor-not-allowed]="currenPage() === page()"
@@ -50,4 +54,5 @@
       </svg>
     </a>
   </li>
+
 </ul>

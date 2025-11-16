@@ -1,14 +1,89 @@
-<div class="grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 mt-6">
+@if (isLoading()) {
+<spiner />
+}@else {
 
-  @for (service of data().value()?.data?.data; track service) {
+<div class="flex flex-col justify-between w-full gap-2">
 
-  <catalog-list [ServiceName]="service.name"
-    [ServiceDesc]="service.desc"
-    [ServicePrice]="service.price"
-    [ServiceImgUrl]="service.img"
-    [ServiceId]="service.id"
-    [RatingAverage]="service.rating.average_rating"
-    [RatingTotal]="service.rating.total_reviews" />
+  @if (!minimal()) {
+  <div class="flex justify-between items-center">
+
+    <button [class.hidden]="!filter()"
+      class="text-text-primary p-2 rounded-md shadow-md transition-opacity duration-300"
+      (click)="toggleFilter()"
+      [class.opacity-0]="isFilterOpen()"
+      [class.pointer-events-none]="isFilterOpen()">
+      <i class="fa-solid fa-sliders cursor-pointer"></i>
+    </button>
+
+    <h2 class="text-2xl font-bold text-primary">{{title() | titlecase}}</h2>
+
+    <span class="text-sm  relative text-text-primary opacity-80">
+      Total:
+      <b>{{data().value()?.meta?.total}}</b>
+      resultados</span>
+  </div>
+
   }
 
+  <div class="grid gap-6  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-6">
+
+
+    @for (service of data().value()?.data; track service) {
+
+    <catalog-list [ServiceName]="service.name"
+      [ServiceDesc]="service.desc"
+      [ServicePrice]="service.price"
+      [ServiceImgUrl]="service.img"
+      [ServiceId]="service.id"
+      [RatingAverage]="service.rating?.average_rating"
+      [RatingTotal]="service.rating?.total_reviews || 0" />
+    }
+
+    @if (data().value()?.meta === null || data().value()?.data?.length === 0) {
+
+    <div
+      class="flex col-span-full flex-col items-center justify-center text-center h-[70vh] bg-secondary rounded-xl p-10 shadow-md border border-tercery animate-fadeIn">
+      <i class="fa-solid fa-box-open text-7xl text-primary mb-5 opacity-80 animate-bounce"></i>
+      <h3 class="text-2xl font-semibold text-text-primary">No hay servicios disponibles</h3>
+      <p class="text-gray-400 mt-2 max-w-md">
+        Actualmente no hay servicios registrados. Intenta ajustar los filtros o vuelve más tarde.
+      </p>
+    </div>
+
+    }
+  </div>
+
+  <!-- Paginate -->
+  @if (!minimal() && data().value()?.meta !== null) {
+  <div class="mt-10">
+    <app-pagination [page]="data().value()?.meta?.last_page ?? 0"
+      [currenPage]="paginateService.currenPage()" />
+
+  </div>
+
+  }
+
+
 </div>
+
+}
+<!--
+@if (filter()) {
+<aside
+  class="fixed top-[80px] left-0 h-[calc(100vh-80px)] w-72 bg-secondary text-text-primary shadow-lg p-5 transform transition-transform duration-500 ease-in-out z-20 overflow-y-auto"
+  [class.-translate-x-full]="!isFilterOpen()">
+
+  <div class="flex justify-between items-center mb-6">
+    <h3 class="text-lg font-semibold">Filtros</h3>
+    <button (click)="toggleFilter()"
+      class="text-primary hover:text-accent cursor-pointer">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+  </div>
+
+  Filters
+  <filter-shared (filterApplied)="onFiltersChanged($event)" />
+
+
+</aside>
+} -->

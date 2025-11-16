@@ -1,45 +1,65 @@
 <div
-  class="bg-secondary rounded-md overflow-hidden shadow-md border border-tercery duration-[.5s] hover:shadow-primary/50 hover:shadow-2xl transition">
+  class="bg-secondary rounded-xl overflow-hidden shadow-md border border-tercery duration-500 hover:shadow-primary/50 hover:shadow-2xl transition flex flex-col min-h-[400px]">
+
   <!-- img -->
   <div class="relative">
+
     <img [src]="ServiceImgUrl()"
       alt="Video"
-      class="h-40 w-full object-cover"
+      class="h-44 w-full object-cover"
       loading="lazy" />
-    <i
-      class="fa-regular fa-heart absolute top-3 right-3 text-text-primary cursor-pointer hover:text-primary transition"></i>
+
+    <!-- Icon favorite -->
+    <i (click)="toggleFavorite()"
+      class="fa-heart text-[1.3rem] absolute top-3 right-3 cursor-pointer transition-all duration-300"
+      [ngClass]="{
+        'fa-solid text-red-500 animate-heartbeat': isFavorite(),
+        'fa-regular text-text-primary hover:text-primary': !isFavorite()
+      }">
+    </i>
   </div>
 
   <!-- info -->
-  <div class="p-4 flex flex-col gap-2">
-    <h3 class="font-semibold text-text-primary">{{ServiceName()}}</h3>
-    <p class="text-sm text-gray-400">{{ServiceDesc()}}</p>
+  <div class="p-5 flex flex-col flex-1">
 
-    <!-- ⭐ Calificación -->
-    <div class="flex items-center text-yellow-400 gap-[2px]">
+    <!-- Title -->
+    <div class="flex flex-col gap-2">
+      <h3 class="font-semibold text-text-primary text-lg truncate">{{ ServiceName() }}</h3>
 
-      <!-- @for (item of items; track $index) {} -->
-
-      <i class="fa-solid fa-star"></i>
-      <i class="fa-solid fa-star"></i>
-      <i class="fa-solid fa-star"></i>
-      <i class="fa-solid fa-star"></i>
-      <i class="fa-regular fa-star"></i>
-
-      <span class="ml-1 text-sm text-gray-400">
-        @if(RatingAverage()){
-        ({{RatingTotal()}})
-        }@else {
-        (0)
-        }
-      </span>
+      <p class="text-sm text-gray-400 line-clamp-2 leading-snug">
+        {{ ServiceDesc() }}
+      </p>
     </div>
 
-    <span class="text-success font-medium">MX{{ServicePrice() | currency}}</span>
 
-    <button [routerLink]="['/service/' + ServiceId()]"
-      class="bg-primary text-text-primary py-1 rounded-md hover:bg-accent transition">
-      Más info
-    </button>
+    <!-- Rating -->
+    <div class="mt-auto flex flex-col gap-2.5">
+
+
+      @if (RatingAverage() === null) {
+      <p class="text-gray-300 text-[.5rem]">Sin ranting</p>
+      }@else {
+      <div class="flex items-center gap-[2px] text-yellow-400">
+        <span class="mr-1 text-xs text-gray-300">{{ RatingAverage()}}</span>
+        @for (star of stars; track $index) {
+        <i [class]="getStarClass(star)"></i>
+        }
+        <span class="ml-1 text-xs text-gray-400">({{ RatingTotal() }})</span>
+      </div>
+      }
+
+
+
+      <span class="text-success font-semibold">
+        {{ ServicePrice() | currency:'MXN' }}
+      </span>
+
+
+      <button [routerLink]="['/customer/services/' + toSlug(ServiceName())]"
+        [state]="{id: ServiceId()}"
+        class="bg-primary mt-1 cursor-pointer text-text-primary py-1 rounded-md hover:bg-accent hover:text-gray-800 transition">
+        Más info
+      </button>
+    </div>
   </div>
 </div>

@@ -16,11 +16,6 @@ export const authRoutes: Routes = [
         path: 'register',
         component: RegisterPageComponent
       },
-      // {
-      //   path: '',
-      //   redirectTo: 'login',
-      //   pathMatch: 'full'
-      // },
       {
         path: '**',
         redirectTo: 'login'

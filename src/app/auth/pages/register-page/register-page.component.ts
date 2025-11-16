@@ -1,15 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TitleAuthComponentComponent } from "../../components/title-auth-component/title-auth-component.component";
-import { RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ɵInternalFormsSharedModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
-import { AlertsAuthComponent } from "../../components/alerts-auth/alerts-auth.component";
 import { CommonModule } from '@angular/common';
-
+import { AlertsAuthComponent } from "../../components/alerts-auth/alerts-auth.component";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register-page',
-  imports: [TitleAuthComponentComponent, RouterLink, ɵInternalFormsSharedModule, ReactiveFormsModule, AlertsAuthComponent, CommonModule],
+  imports: [
+    TitleAuthComponentComponent,
+    RouterLink,
+    ReactiveFormsModule,
+    CommonModule,
+    AlertsAuthComponent
+  ],
   templateUrl: './register-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -17,38 +23,74 @@ export class RegisterPageComponent {
 
   fb = inject(FormBuilder);
   validationService = inject(GetErrorsAuthService);
+  router = inject(Router);
+  authService = inject(AuthService);
 
-  hasError = signal(false);
+  errors = signal<string[]>([]);
   isPosting = signal(false);
 
   registerForm: FormGroup = this.fb.group({
+    role: ['user', [Validators.required]],
     name: ['', [Validators.required, Validators.maxLength(50)]],
     surname: ['', [Validators.required, Validators.maxLength(100)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     confirm_password: ['', [Validators.required, Validators.minLength(8)]]
-  })
+  });
 
   onSubmit() {
-  if (this.registerForm.invalid) {
-    this.hasError.set(true);
-    setTimeout(() =>
-      this.hasError.set(false)
-    , 4000);
-    return;
+    if (this.registerForm.invalid) {
+      this.showFormErrors();
+      return;
+    }
+
+    const payload = this.registerForm.value;
+    this.isPosting.set(true);
+
+    this.authService.register(payload).subscribe(ok => {
+      this.isPosting.set(false);
+
+      if (ok) {
+        this.registerForm.reset({ role: 'user' });
+
+        setTimeout(() => {
+          this.router.navigateByUrl('/auth/login');
+        }, 1200);
+
+        return;
+      }
+      this.pushError("No se pudo completar el registro");
+    });
   }
 
-    const { name ,email, surname ,password, confirm_password } = this.registerForm.value;
 
-    console.log({name, surname , email, password, confirm_password });
+  private showFormErrors() {
+    const list: string[] = [];
+
+    Object.keys(this.registerForm.controls).forEach(field => {
+      const msg = this.getFieldErrors(field);
+      if (msg) list.push(msg);
+    });
+
+    this.errors.set(list);
+    this.autoClear();
   }
 
-  isValidField(fieldName: string): boolean | null {
-    return this.validationService.hasError(this.registerForm.controls[fieldName]);
+  private pushError(msg: string) {
+    this.errors.update(prev => [...prev, msg]);
+    this.autoClear();
+  }
+
+  private showSuccess(msg: string) {
+    this.errors.set([msg]);
+    this.autoClear();
+  }
+
+  private autoClear() {
+    setTimeout(() => this.errors.set([]), 4000);
   }
 
   getFieldErrors(fieldName: string): string | null {
     return this.validationService.getErrorMessage(this.registerForm.controls[fieldName]);
   }
-
- }
+}

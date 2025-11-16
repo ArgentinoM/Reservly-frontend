@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
-import { CanMatchFn, Route, Router, UrlSegment } from '@angular/router';
+import { CanMatchFn, Route, UrlSegment } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
+import { firstValueFrom } from 'rxjs';
 
 export const SellerGuard: CanMatchFn = async(
   route: Route,
@@ -8,15 +9,9 @@ export const SellerGuard: CanMatchFn = async(
 ) => {
 
   const authService =  inject(AuthService);
-  const router = inject(Router);
 
-  const rol_id = authService.rolId;
+  await firstValueFrom(authService.checkStatus());
 
-  if(rol_id() !== 1){
-    router.navigateByUrl('/');
-    return false
 
-  }
-
-  return true;
+  return authService.isSeller();
 }
