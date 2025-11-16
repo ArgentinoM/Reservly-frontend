@@ -1,0 +1,86 @@
+<navigate [itemsMenu]="null" />
+
+<div class="relative min-h-screen overflow-hidden">
+
+
+  <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div class="absolute top-10 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-accent/20 rounded-full blur-[100px]
+                animate-[spin_25s_linear_infinite]">
+    </div>
+  </div>
+
+
+  <section class="container mx-auto px-6  grid lg:grid-cols-[30%_70%] gap-14 items-center">
+
+    <div class="space-y-6 animate-fadeIn">
+      <h1 class="text-5xl font-bold leading-tight">
+        Servicios Profesionales de <span class="text-primary">Alta Calidad</span>
+      </h1>
+      <p class="text-lg text-text-secondary">
+        Conecta con expertos verificados listos para ayudarte: diseño, fotografía, programación, marketing y mucho más.
+        Todo en un solo lugar.
+      </p>
+
+      <button [routerLink]="['auth/login']"
+        class="bg-primary text-tercery px-6 py-3 rounded-xl font-semibold cursor-pointer
+               hover:bg-primary/80 hover:shadow-lg hover:shadow-primary/30
+               hover:scale-[1.03] active:scale-[0.98] transition">
+        Ver Servicios
+      </button>
+    </div>
+
+    <div class="flex justify-center">
+      <img src="https://res.cloudinary.com/dmow8n7pu/image/upload/v1763260086/fondo_orzb6n.png"
+        class="rounded-3xl max-h-[50rem] object-cover animate-[float_6s_ease-in-out_infinite]" />
+    </div>
+
+  </section>
+
+  <!-- Services -->
+  <section class="container mx-auto px-6 ">
+    <h2 class="text-4xl font-bold text-center mb-14">Servicios Populares</h2>
+
+    <div class="grid md:grid-cols-3 gap-10">
+
+      @for (service of servicios; track service.titulo) {
+      <div class="bg-secondary/70 backdrop-blur-xl p-6 rounded-2xl shadow-lg
+                 hover:-translate-y-2 hover:shadow-primary/40 hover:scale-[1.03]
+                 transition-transform duration-300 cursor-pointer">
+
+        <i class="fa-solid {{ service.icon }} text-primary text-4xl mb-4"></i>
+
+        <h3 class="text-2xl font-semibold mb-2">{{ service.titulo }}</h3>
+
+        <p class="text-text-secondary mb-4">{{ service.descripcion }}</p>
+
+        <button [routerLink]="['auth/login']"
+          class="text-primary font-semibold hover:underline cursor-pointer">
+          Ver más
+        </button>
+      </div>
+      }
+
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section class="container mx-auto px-6 py-20">
+    <h2 class="text-4xl font-bold text-center mb-12">Lo que dicen nuestros clientes</h2>
+
+    <div class="grid md:grid-cols-3 gap-10">
+
+      @for (item of testimonios; track item.autor) {
+      <div class="bg-secondary/60 p-6 rounded-2xl shadow-md backdrop-blur-xl
+                 hover:scale-[1.02] transition cursor-default">
+
+        <p class="text-text-secondary">{{ item.text }}</p>
+        <h4 class="mt-4 font-bold text-primary">— {{ item.autor }}</h4>
+      </div>
+      }
+
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,12 @@
+<section class="relative flex flex-col mb-5">
+
+  <div class="flex-1 p-6 transition-all duration-500">
+
+    <catalog [filter]="false"
+      [title]="'Tus favoritos'"
+      [data]="catalogFromFavorites"
+      [minimal]="minimal()"
+      [isLoading]="isLoading()" />
+  </div>
+
+</section>
