@@ -24,6 +24,9 @@ export class AuthService {
   private _token = signal<string | null>(localStorage.getItem('token'));
   private http = inject(HttpClient);
   private catalogService = inject(CatalogService);
+  private _checkStatusCache: { value: boolean; expiresAt: number } | null = null;
+  private readonly CACHE_DURATION = 60 * 60 * 1000;
+
 
 
   private caches = new Set<Map<any, any>>();
@@ -73,19 +76,35 @@ export class AuthService {
   }
 
   checkStatus(): Observable<boolean> {
+    const now = Date.now();
+
+    if (this._checkStatusCache && this._checkStatusCache.expiresAt > now) {
+      return of(this._checkStatusCache.value);
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
       this.logout();
       return of(false);
     }
 
-    return this.http
-      .get<AuthResponse>(`${baseUrl}/${verifyEndpoint}`)
-      .pipe(
-        map((resp) => this.handleAuthSuccess(resp)),
-        catchError((error: any) => this.handleAuthError(error))
-      );
+    return this.http.get<AuthResponse>(`${baseUrl}/${verifyEndpoint}`).pipe(
+      map((resp) => {
+        const success = this.handleAuthSuccess(resp);
+        this._checkStatusCache = {
+          value: success,
+          expiresAt: now + this.CACHE_DURATION,
+        };
+        return success;
+      }),
+      catchError((error: any) => {
+        this.handleAuthError(error);
+        this._checkStatusCache = { value: false, expiresAt: now + this.CACHE_DURATION };
+        return of(false);
+      })
+    );
   }
+
 
   logout() {
     return this.http.get(`${baseUrl}/${logoutEndpoint}`).pipe(
@@ -93,13 +112,13 @@ export class AuthService {
         this._user.set(null);
         this._token.set(null);
         this._authStatus.set('not-authenticated');
-        this.clearCache()
-
+        this.clearCache();
+        this._checkStatusCache = null;
         localStorage.removeItem('token');
       })
-    )
-
+    );
   }
+
 
   private clearCache(){
     this.catalogService.catalogCache.clear();
