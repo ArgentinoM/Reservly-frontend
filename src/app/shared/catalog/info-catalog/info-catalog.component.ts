@@ -5,10 +5,11 @@ import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { SpinerComponent } from "../../components/spiner/spiner.component";
 import { ReviewService } from '../../../core/services/review.service';
+import { CalendarComponent } from "../components/calendar/calendar.component";
 
 @Component({
   selector: 'app-info-catalog',
-  imports: [SpinerComponent, CurrencyPipe, JsonPipe],
+  imports: [SpinerComponent, CurrencyPipe, JsonPipe, CalendarComponent],
   templateUrl: './info-catalog.component.html',
 })
 export class InfoCatalogComponent{

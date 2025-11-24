@@ -47,10 +47,10 @@ export class RegisterPageComponent {
     const payload = this.registerForm.value;
     this.isPosting.set(true);
 
-    this.authService.register(payload).subscribe(ok => {
+    this.authService.register(payload).subscribe((resp) =>{
       this.isPosting.set(false);
 
-      if (ok) {
+      if (resp) {
         this.registerForm.reset({ role: 'user' });
 
         setTimeout(() => {
@@ -59,6 +59,7 @@ export class RegisterPageComponent {
 
         return;
       }
+
       this.pushError("No se pudo completar el registro");
     });
   }

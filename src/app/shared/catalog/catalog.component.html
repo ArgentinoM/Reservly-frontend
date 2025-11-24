@@ -23,9 +23,34 @@
       resultados</span>
   </div>
 
+
+  <div [class.hidden]="!seller()"
+    class="w-full p-2
+     flex justify-end">
+    <a [routerLink]="['../create-services']"
+      class="flex items-center cursor-pointer gap-2 px-5 py-3 bg-primary text-white rounded-xl shadow-md
+           hover:bg-primary/90 hover:shadow-lg transition-all duration-300
+           active:scale-95 font-semibold text-sm">
+      <i class="fa-solid fa-plus text-md"></i>
+      Crear Servicio
+    </a>
+  </div>
+
   }
 
-  <div class="grid gap-6  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-6">
+  @if (data().value()?.meta === null || data().value()?.data?.length === 0) {
+
+  <div
+    class="flex col-span-full flex-col items-center justify-center text-center h-[70vh] bg-secondary rounded-xl p-10 shadow-md border border-tercery animate-fadeIn">
+    <i class="fa-solid fa-box-open text-7xl text-primary mb-5 opacity-80 animate-bounce"></i>
+    <h3 class="text-2xl font-semibold text-text-primary">No hay servicios disponibles</h3>
+    <p class="text-gray-400 mt-2 max-w-md">
+      Actualmente no hay servicios registrados. Intenta ajustar los filtros o vuelve más tarde.
+    </p>
+  </div>
+
+  }@else {
+  <div class="grid gap-6  h-auto  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-6">
 
 
     @for (service of data().value()?.data; track service) {
@@ -39,22 +64,13 @@
       [RatingTotal]="service.rating?.total_reviews || 0" />
     }
 
-    @if (data().value()?.meta === null || data().value()?.data?.length === 0) {
 
-    <div
-      class="flex col-span-full flex-col items-center justify-center text-center h-[70vh] bg-secondary rounded-xl p-10 shadow-md border border-tercery animate-fadeIn">
-      <i class="fa-solid fa-box-open text-7xl text-primary mb-5 opacity-80 animate-bounce"></i>
-      <h3 class="text-2xl font-semibold text-text-primary">No hay servicios disponibles</h3>
-      <p class="text-gray-400 mt-2 max-w-md">
-        Actualmente no hay servicios registrados. Intenta ajustar los filtros o vuelve más tarde.
-      </p>
-    </div>
-
-    }
   </div>
+  }
+
 
   <!-- Paginate -->
-  @if (!minimal() && data().value()?.meta !== null) {
+  @if (!minimal() && data().value()?.meta !== null && data().value()?.meta?.last_page !== 1) {
   <div class="mt-10">
     <app-pagination [page]="data().value()?.meta?.last_page ?? 0"
       [currenPage]="paginateService.currenPage()" />

@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment.development';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { AuthResponse } from '../interfaces/auth-response';
 import { rxResource } from '@angular/core/rxjs-interop'
+import { CatalogService } from '../../customer/services/catalog.service';
 
 type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated'
 const baseUrl = environment.url_base;
@@ -22,6 +23,10 @@ export class AuthService {
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(localStorage.getItem('token'));
   private http = inject(HttpClient);
+  private catalogService = inject(CatalogService);
+
+
+  private caches = new Set<Map<any, any>>();
 
   checkStatusResource = rxResource({
     loader: () => this.checkStatus(),
@@ -41,7 +46,12 @@ export class AuthService {
   token = computed(this._token);
   isSeller = computed(() => this._user()?.rol.name.includes('seller') ?? false);
 
-   register(data: any): Observable<boolean> {
+  isLoggedInLocal(): boolean {
+    const token = localStorage.getItem('token');
+    return !!token;
+  }
+
+  register(data: any): Observable<boolean> {
     return this.http.post(`${baseUrl}/${registerEndpoint}`, data).pipe(
       map(() => true),
       catchError((error) => {
@@ -78,12 +88,21 @@ export class AuthService {
   }
 
   logout() {
+    return this.http.get(`${baseUrl}/${logoutEndpoint}`).pipe(
+      map(() => {
+        this._user.set(null);
+        this._token.set(null);
+        this._authStatus.set('not-authenticated');
+        this.clearCache()
 
-    this._user.set(null);
-    this._token.set(null);
-    this._authStatus.set('not-authenticated');
+        localStorage.removeItem('token');
+      })
+    )
 
-    localStorage.removeItem('token');
+  }
+
+  private clearCache(){
+    this.catalogService.catalogCache.clear();
   }
 
   private handleAuthSuccess({ token, data }: AuthResponse) {

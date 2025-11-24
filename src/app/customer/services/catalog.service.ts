@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, tap, catchError, throwError } from 'rxjs';
 import { Catalog } from '../interfaces/response-catalog.interface';
 import { PaginateResponse } from '../../core/interfaces/respose-paginate.interface';
 import { ApiResponse } from '../../core/interfaces/response.interface';
@@ -17,6 +17,15 @@ interface Options {
   // name?: string;
 }
 
+interface createOptions {
+  name?: string | null,
+  desc?: string | null,
+  price?: number | null,
+  duration?: number | null,
+  img: any,
+  category_id?: number | null,
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,8 +36,9 @@ export class CatalogService {
   private http = inject(HttpClient);
   private baseUrl = environment.url_base;
   private getServicesEndpoint = environment.getServices_endpoint;
+  private storeServicesEndpoint = environment.storeServices_endpoint;
 
-  private catalogCache = new Map<string, PaginateResponse<Catalog>>();
+  catalogCache = new Map<string, PaginateResponse<Catalog>>();
   private catalogIdCache = new Map<string, ApiResponse<Catalog>>();
 
   total = computed(() =>
@@ -68,6 +78,26 @@ export class CatalogService {
     .pipe(
       tap((resp) => this.catalogIdCache.set( 'service' , resp))
     )
+  }
+
+  createService(options: createOptions): Observable<ApiResponse<Catalog>>{
+
+      const formData = new FormData();
+      formData.append('name', options.name ?? '');
+      formData.append('desc', options.desc ?? '');
+      formData.append('price', String(options.price ?? 0));
+      formData.append('duration', String(options.duration ?? 0));
+      formData.append('category_id', String(options.category_id ?? 0));
+      formData.append('img', options.img);
+
+    return this.http.post<ApiResponse<Catalog>>(`${this.baseUrl}/${this.storeServicesEndpoint}`, formData).pipe(
+      catchError((error) => {
+      return throwError(() => ({
+        message: error
+      }));
+      })
+    )
+
   }
 
 }

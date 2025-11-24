@@ -1,5 +1,5 @@
 import { Component, inject, input, signal, WritableSignal } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ItemsNavigate } from '../../../core/interfaces/itemNavigate.interface';
 import { AuthService } from '../../../auth/services/auth.service';
 import { TitleCasePipe } from '@angular/common';
@@ -14,6 +14,7 @@ import { TitleCasePipe } from '@angular/common';
 export class NavigateComponent {
 
   authService = inject(AuthService);
+  routes =  inject(Router)
 
   itemsMenu = input.required<ItemsNavigate[] | null>();
 
@@ -21,6 +22,14 @@ export class NavigateComponent {
 
   toggleDropdown(): void {
     this.dropdownOpen.update(currentValue => !currentValue);
+  }
+
+  logout(){
+    this.authService.logout().subscribe({
+      next: () => this.routes.navigateByUrl('/'),
+      error: err => console.error('Error al cerrar sesión:', err)
+    }
+    )
   }
 
 }

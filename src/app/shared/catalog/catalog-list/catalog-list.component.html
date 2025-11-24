@@ -55,11 +55,11 @@
       </span>
 
 
-      <button [routerLink]="['/customer/services/' + toSlug(ServiceName())]"
+      <a [routerLink]="['' + toSlug(ServiceName())]"
         [state]="{id: ServiceId()}"
-        class="bg-primary mt-1 cursor-pointer text-text-primary py-1 rounded-md hover:bg-accent hover:text-gray-800 transition">
+        class="bg-primary mt-1 cursor-pointer text-center text-text-primary py-1 rounded-md hover:bg-accent hover:text-gray-800 transition">
         Más info
-      </button>
+      </a>
     </div>
   </div>
 </div>

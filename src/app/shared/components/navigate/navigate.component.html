@@ -30,7 +30,7 @@
 
 
   <!-- autenthitication -->
-  @if (authService.authStatus() === 'not-authenticated') {
+  @if (authService.authStatus() !== 'authenticated') {
   <!-- Buttons -->
 
   <div class="flex gap-4">
@@ -75,7 +75,7 @@
         Ver perfil
       </button>
 
-      <button (click)="authService.logout()"
+      <button (click)="logout()"
         class="w-full cursor-pointer text-left px-4 py-3 text-text-primary hover:bg-accent/20 transition">
         Cerrar sesión
       </button>

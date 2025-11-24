@@ -1,1 +1,14 @@
-<p>services-seller works!</p>
+<!-- <notifications-component /> -->
+
+<section class="relative flex flex-col mb-5">
+
+  <!-- Services -->
+  <div class="flex-1 p-6 transition-all duration-500">
+
+    <!-- Card services -->
+    <catalog [data]="catalogResource"
+      [title]="'Mis Servicios'"
+      [isLoading]="isLoading()" />
+  </div>
+
+</section>

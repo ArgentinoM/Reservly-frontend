@@ -1,0 +1,103 @@
+<section class="grid grid-cols-2 gap-5">
+
+  <!-- Calendar -->
+  <div class="bg-tercery/30 p-6 rounded-2xl shadow-md">
+    <div class="flex justify-between items-center my-4">
+
+      <button
+        class="px-2 py-1 rounded cursor-pointer hover:bg-tercery transition disabled:opacity-50 disabled:cursor-no-drop"
+        (click)="nextMonth(-1)"
+        [disabled]="date() < today">
+        <i class="fa-solid fa-angle-left"></i>
+      </button>
+
+      <span class="font-semibold text-lg text-accent">
+        {{ date() | date:'MMMM y' }}
+      </span>
+
+      <button class="px-2 py-1 cursor-pointer rounded hover:bg-tercery transition"
+        (click)="nextMonth(1)">
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
+
+    </div>
+
+    <div class="grid grid-cols-7 text-center font-medium border-b border-tercery pb-2 mb-2">
+      @for (d of days; track d) {
+      <p>{{ d | slice:0:3 }}</p>
+      }
+    </div>
+
+    <div class="grid grid-cols-7 text-center gap-1">
+      @for (item of arrayDays(); track $index) {
+
+      <button
+        class="p-4 duration-300 cursor-pointer rounded-2xl hover:bg-primary disabled:cursor-no-drop disabled:opacity-50"
+        [ngClass]="isToday(item) ? 'bg-secondary text-white' : ''"
+        [disabled]="isPastDay(item)">
+        {{ item }}
+      </button>
+
+      }
+    </div>
+
+    <div class="pt-4 px-4">
+
+      <div class="flex items-center gap-4">
+        <span class="inline-block w-4 h-4 bg-error rounded-full"></span>
+        <p>No disponible</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Time and booking details-->
+  <div class="flex flex-col justify-center gap-16 px-6">
+
+    <!-- Time -->
+    <form class="bg-tercery/30 p-6 rounded-2xl shadow-md flex flex-col items-center gap-5 w-full">
+      <span class="text-lg font-semibold text-primary">Selecciona la hora</span>
+
+      <div class="flex items-center gap-4">
+        <input type="time"
+          class="bg-secondary text-text-primary p-2 rounded-lg shadow-inner" />
+
+        <span class="opacity-70">a</span>
+
+        <input type="time"
+          class="bg-secondary text-text-primary p-2 rounded-lg shadow-inner" />
+      </div>
+    </form>
+
+    <!-- booking details -->
+    <div class="bg-tercery/20 p-6 rounded-2xl shadow-md flex flex-col items-start gap-4">
+      <h2 class="text-primary text-xl font-semibold border-b border-primary/30 pb-2 w-full">
+        Datos de reservación
+      </h2>
+
+      <div class="flex flex-col gap-2 text-text-primary opacity-90 w-full">
+
+        <div class="flex justify-between">
+          <b>Fecha:</b>
+          <p>12-Febrero-2026</p>
+        </div>
+
+        <div class="flex justify-between">
+          <b>Rango de horas:</b>
+          <p>12:00am - 14:00pm</p>
+        </div>
+      </div>
+
+      <p class="mt-2 text-sm opacity-70 italic text-center w-full">
+        *Llegar 5 minutos antes de la hora estimada*
+      </p>
+
+      <button
+        class="mt-5 w-full px-6 py-3 cursor-pointer border border-primary rounded-xl font-semibold hover:bg-success/40 transition">
+        Reservar ahora
+      </button>
+    </div>
+
+  </div>
+
+</section>
