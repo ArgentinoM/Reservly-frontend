@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { Review } from '../interfaces/review.interface';
 import { PaginateResponse } from '../interfaces/respose-paginate.interface';

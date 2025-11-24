@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { Observable, of, tap, catchError, throwError } from 'rxjs';
 import { Catalog } from '../interfaces/response-catalog.interface';
 import { PaginateResponse } from '../../core/interfaces/respose-paginate.interface';
