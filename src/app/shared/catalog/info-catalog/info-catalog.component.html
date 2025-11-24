@@ -58,9 +58,14 @@
 
 
     <!-- Calendr -->
+    @if (isCustomer()) {
     <div class="w-full mt-10 ">
       <app-calendar />
     </div>
+    }@else {
+    <!-- TODO: agregar información sobre reservaciones -->
+    }
+
 
     <!-- Comentarios -->
     <div class="mt-12">

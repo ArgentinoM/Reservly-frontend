@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { NavigateComponent } from "../../shared/components/navigate/navigate.component";
 import { RouterLink } from "@angular/router";
-import { CalendarComponent } from "../../shared/catalog/components/calendar/calendar.component";
 
 @Component({
   selector: 'app-home-page-global',
-  imports: [NavigateComponent, RouterLink, CalendarComponent],
+  imports: [NavigateComponent, RouterLink],
   templateUrl: './home-page-global.component.html',
 })
 export class HomePageGlobalComponent {

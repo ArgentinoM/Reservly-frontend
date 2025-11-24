@@ -6,6 +6,7 @@ import { AlertsAuthComponent } from '../../components/alerts-auth/alerts-auth.co
 import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
 import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
+import { NotificationsComponent } from "../../../shared/components/notifications/notifications.component";
 
 @Component({
   selector: 'app-login-page',
@@ -13,8 +14,9 @@ import { firstValueFrom } from 'rxjs';
     TitleAuthComponentComponent,
     RouterLink,
     ReactiveFormsModule,
-    AlertsAuthComponent
-  ],
+    AlertsAuthComponent,
+    NotificationsComponent
+],
   templateUrl: './login-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,6 +30,9 @@ export class LoginPageComponent {
 
   errors = signal<string[]>([]);
   isPosting = signal(false);
+  alertVisible = signal(false);
+  alertType!: 'success' | 'error';
+  alertMessage = signal('');
 
 
   loginForm: FormGroup = this.fb.group({
@@ -46,16 +51,18 @@ export class LoginPageComponent {
 
     const { email, password } = this.loginForm.value;
 
-    this.authService.login(email, password).subscribe(async (isAuthenticated) => {
-      this.isPosting.set(false);
+   this.authService.login(email, password).subscribe(async (isAuthenticated) => {
 
-      if (isAuthenticated) {
-        await this.redirectUser();
-        return;
-      }
+    this.isPosting.set(false);
 
+    if (isAuthenticated) {
+      this.showAlert('success', 'Has iniciado sesión correctamente');
+      await this.redirectUser();
+    } else {
       this.pushError('Correo o contraseña incorrectos');
-    });
+    }
+   });
+
   }
 
   private async redirectUser() {
@@ -70,20 +77,29 @@ export class LoginPageComponent {
 
 
   private showFormErrors() {
-    const newErrors: string[] = [];
-
-    Object.keys(this.loginForm.controls).forEach((field) => {
+    for (const field of Object.keys(this.loginForm.controls)) {
       const msg = this.getFieldErrors(field);
-      if (msg) newErrors.push(msg);
-    });
+      if (msg) {
 
-    this.errors.set(newErrors);
-    this.autoClearErrors();
+        const prettyField = field.charAt(0).toUpperCase() + field.slice(1);
+        this.showAlert('error', `${prettyField}: ${msg}`);
+        break;
+      }
+    }
+  }
+
+  private showAlert(type: 'success' | 'error', message: string) {
+    this.alertType = type;
+    this.alertMessage.set(message);
+    this.alertVisible.set(true);
+
+    setTimeout(() =>
+      this.alertVisible.set(false)
+    , 6000);
   }
 
   private pushError(message: string) {
-    this.errors.update((prev) => [...prev, message]);
-    this.autoClearErrors();
+    this.showAlert('error', message);
   }
 
   private autoClearErrors() {

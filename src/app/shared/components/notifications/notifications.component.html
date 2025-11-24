@@ -2,21 +2,22 @@
   class="fixed inset-0 flex items-center justify-center bg-secondary/70 backdrop-blur-sm z-50 animate-[fadeIn_0.3s_ease-in-out]">
   <div class="bg-tercery rounded-2xl shadow-2xl p-8 w-[90%] max-w-md text-center text-text-primary font-[Manrope]">
 
-    <!-- Icon -->
     <div class="flex justify-center mb-4">
-      <div class="bg-success/10 text-success rounded-full w-16 h-16 flex items-center justify-center">
-        <i class="fa-solid fa-check text-3xl"></i>
+      <div [ngClass]="bgClass + ' ' + colorClass + ' rounded-full w-16 h-16 flex items-center justify-center'">
+        <i class="fa-solid"
+          [ngClass]="icon + ' text-3xl'"></i>
       </div>
     </div>
 
-    <!-- Title -->
-    <h2 class="text-2xl font-semibold mb-2 text-success">¡Éxito!</h2>
+    <h2 class="text-2xl font-semibold mb-2"
+      [ngClass]="colorClass">
+      {{ title }}
+    </h2>
 
-    <!-- Message -->
+
     <p class="text-gray-300 mb-6">
-      Tu servicio se ha agregado a favoritos correctamente.
+      {{ message() }}
     </p>
-
 
     <button (click)="closeModal()"
       class="bg-primary cursor-pointer text-text-primary px-6 py-2 rounded-lg font-medium hover:bg-accent hover:text-tercery duration-300 transition-all">

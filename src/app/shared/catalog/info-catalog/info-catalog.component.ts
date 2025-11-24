@@ -1,15 +1,16 @@
-import { CurrencyPipe, JsonPipe, Location } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { CurrencyPipe, Location } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { CatalogService } from '../../../customer/services/catalog.service';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { SpinerComponent } from "../../components/spiner/spiner.component";
 import { ReviewService } from '../../../core/services/review.service';
 import { CalendarComponent } from "../components/calendar/calendar.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-info-catalog',
-  imports: [SpinerComponent, CurrencyPipe, JsonPipe, CalendarComponent],
+  imports: [SpinerComponent, CurrencyPipe, CalendarComponent],
   templateUrl: './info-catalog.component.html',
 })
 export class InfoCatalogComponent{
@@ -17,11 +18,13 @@ export class InfoCatalogComponent{
   private location = inject(Location);
   private catalogService = inject(CatalogService);
   private reviewService = inject(ReviewService);
+  private router = inject(Router);
 
   private idService = signal(history.state.id)
 
   isLoading =  signal<boolean>(false);
   stars = [1, 2, 3, 4, 5];
+  isCustomer = signal<boolean>(this.router.url.includes('customer'))
 
   catalogResource = rxResource({
     request: () => ({

@@ -79,6 +79,7 @@
                   focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary/50
                   text-text-primary placeholder-text-secondary transition-all"
       placeholder="••••••••">
+    <p class="pt-2 opacity-60 text-[.8rem]">* Debe contener minimo 8 caracteres</p>
   </div>
 
   <!-- Confirm Password -->
@@ -96,7 +97,6 @@
 
 
   <button type="submit"
-    [disabled]="registerForm.invalid"
     class="w-full bg-primary/90 text-app-bg py-3 rounded-lg font-semibold
                  hover:bg-primary transition-all duration-200 cursor-pointer disabled:cursor-no-drop disabled:opacity-40">
     Crear Cuenta
@@ -113,10 +113,8 @@
 </form>
 
 
-<div class="fixed bottom-4 right-4 flex flex-col gap-3 z-50">
-  @for (error of errors(); track $index) {
-  <alerts-auth>
-    {{ error }}
-  </alerts-auth>
-  }
-</div>
+@if (alertVisible()) {
+<notifications-component [type]="alertType"
+  [message]="alertMessage()"
+  (close)="alertVisible.set(false)" />
+}

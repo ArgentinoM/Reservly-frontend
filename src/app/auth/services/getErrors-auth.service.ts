@@ -15,8 +15,6 @@ export class GetErrorsAuthService {
 
     const errors: ValidationErrors = control.errors;
 
-    console.log(errors);
-
     for (const key of Object.keys(errors)) {
       switch (key) {
         case 'email':

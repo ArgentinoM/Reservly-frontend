@@ -1,24 +1,24 @@
 <navigate [itemsMenu]="null" />
 
-<div class="relative px-[10rem] min-h-screen overflow-hidden">
+<div class="relative px-4 sm:px-6 lg:px-20 min-h-screen overflow-hidden">
 
 
   <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-    <div class="absolute top-10 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
-
-    <div class="absolute bottom-10 right-10 w-96 h-96 bg-accent/20 rounded-full blur-[100px]
-                animate-[spin_25s_linear_infinite]">
+    <div class="absolute top-10 left-10 w-56 h-56 sm:w-72 sm:h-72 bg-primary/20 rounded-full blur-3xl animate-pulse">
     </div>
+
+    <div class="absolute bottom-10 right-10 w-72 h-72 sm:w-96 sm:h-96 bg-accent/20 rounded-full blur-[80px] sm:blur-[100px]
+                animate-[spin_25s_linear_infinite]"></div>
   </div>
 
 
-  <section class="container mx-auto grid lg:grid-cols-[30%_70%] gap-14 items-center">
+  <section class="container mx-auto grid grid-cols-1 lg:grid-cols-[30%_70%] gap-10 lg:gap-14 items-center py-20">
 
-    <div class="space-y-6 animate-fadeIn">
-      <h1 class="text-5xl font-bold leading-tight">
+    <div class="space-y-6 animate-fadeIn text-center lg:text-left">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
         Servicios Profesionales de <span class="text-primary">Alta Calidad</span>
       </h1>
-      <p class="text-lg text-text-secondary">
+      <p class="text-base sm:text-lg text-text-secondary">
         Conecta con expertos verificados listos para ayudarte: diseño, fotografía, programación, marketing y mucho más.
         Todo en un solo lugar.
       </p>
@@ -31,29 +31,29 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center mt-10 lg:mt-0">
       <img src="https://res.cloudinary.com/dmow8n7pu/image/upload/v1763260086/fondo_orzb6n.png"
-        class="rounded-3xl max-h-[50rem] object-cover animate-[float_6s_ease-in-out_infinite]" />
+        class="rounded-3xl max-h-[30rem] sm:max-h-[40rem] lg:max-h-[50rem] object-cover animate-[float_6s_ease-in-out_infinite]" />
     </div>
 
   </section>
 
-  <!-- Services -->
-  <section class="container mx-auto ">
-    <h2 class="text-4xl font-bold text-center mb-14">Servicios Populares</h2>
 
-    <div class="grid md:grid-cols-3 gap-10">
+  <section class="container mx-auto py-20">
+    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-10 sm:mb-14">Servicios Populares</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10">
 
       @for (service of servicios; track service.titulo) {
       <div class="bg-secondary/70 backdrop-blur-xl p-6 rounded-2xl shadow-lg
-                 hover:-translate-y-2 hover:shadow-primary/40 hover:scale-[1.03]
+                 hover:-translate-y-1 hover:shadow-primary/40 hover:scale-[1.03]
                  transition-transform duration-300 cursor-pointer">
 
-        <i class="fa-solid {{ service.icon }} text-primary text-4xl mb-4"></i>
+        <i class="fa-solid {{ service.icon }} text-primary text-3xl sm:text-4xl mb-4"></i>
 
-        <h3 class="text-2xl font-semibold mb-2">{{ service.titulo }}</h3>
+        <h3 class="text-xl sm:text-2xl font-semibold mb-2">{{ service.titulo }}</h3>
 
-        <p class="text-text-secondary mb-4">{{ service.descripcion }}</p>
+        <p class="text-text-secondary mb-4 text-sm sm:text-base">{{ service.descripcion }}</p>
 
         <button [routerLink]="['auth/login']"
           class="text-primary font-semibold hover:underline cursor-pointer">
@@ -65,18 +65,18 @@
     </div>
   </section>
 
-  <!-- TESTIMONIOS -->
-  <section class="container mx-auto  py-20">
-    <h2 class="text-4xl font-bold text-center mb-12">Lo que dicen nuestros clientes</h2>
 
-    <div class="grid md:grid-cols-3 gap-10">
+  <section class="container mx-auto py-20">
+    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-10 sm:mb-12">Lo que dicen nuestros clientes</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10">
 
       @for (item of testimonios; track item.autor) {
       <div class="bg-secondary/60 p-6 rounded-2xl shadow-md backdrop-blur-xl
                  hover:scale-[1.02] transition cursor-default">
 
-        <p class="text-text-secondary">{{ item.text }}</p>
-        <h4 class="mt-4 font-bold text-primary">— {{ item.autor }}</h4>
+        <p class="text-text-secondary text-sm sm:text-base">{{ item.text }}</p>
+        <h4 class="mt-4 font-bold text-primary text-sm sm:text-base">— {{ item.autor }}</h4>
       </div>
       }
 

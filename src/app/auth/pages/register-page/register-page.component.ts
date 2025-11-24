@@ -6,6 +6,7 @@ import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
 import { CommonModule } from '@angular/common';
 import { AlertsAuthComponent } from "../../components/alerts-auth/alerts-auth.component";
 import { AuthService } from '../../services/auth.service';
+import { NotificationsComponent } from "../../../shared/components/notifications/notifications.component";
 
 @Component({
   selector: 'app-register-page',
@@ -14,8 +15,9 @@ import { AuthService } from '../../services/auth.service';
     RouterLink,
     ReactiveFormsModule,
     CommonModule,
-    AlertsAuthComponent
-  ],
+    AlertsAuthComponent,
+    NotificationsComponent
+],
   templateUrl: './register-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,6 +30,9 @@ export class RegisterPageComponent {
 
   errors = signal<string[]>([]);
   isPosting = signal(false);
+  alertVisible = signal(false);
+  alertType: 'success' | 'error' = 'success';
+  alertMessage = signal('');
 
   registerForm: FormGroup = this.fb.group({
     role: ['user', [Validators.required]],
@@ -40,51 +45,58 @@ export class RegisterPageComponent {
 
   onSubmit() {
     if (this.registerForm.invalid) {
-      this.showFormErrors();
+      this.showFormError();
       return;
     }
 
     const payload = this.registerForm.value;
     this.isPosting.set(true);
 
-    this.authService.register(payload).subscribe((resp) =>{
-      this.isPosting.set(false);
+    this.authService.register(payload).subscribe({
+      next: (resp) => {
+        this.isPosting.set(false);
 
-      if (resp) {
-        this.registerForm.reset({ role: 'user' });
+        if (resp) {
+          this.showAlert('success', 'Cuenta creada correctamente');
 
-        setTimeout(() => {
-          this.router.navigateByUrl('/auth/login');
-        }, 1200);
+          this.registerForm.reset({ role: 'user' });
 
-        return;
+          setTimeout(() =>
+            this.router.navigateByUrl('/auth/login')
+          , 1200);
+
+        } else {
+          this.showAlert('error', 'No se pudo completar el registro');
+        }
+      },
+      error: (err: any) => {
+        this.isPosting.set(false);
+
+        this.showAlert('error', err.message);
+      }
+    });
+  }
+
+  private showAlert(type: 'success' | 'error', message: string) {
+    this.alertType = type;
+    this.alertMessage.set(message);
+    this.alertVisible.set(true);
+
+    setTimeout(() => this.alertVisible.set(false), 5000);
+  }
+
+
+  private showFormError() {
+    for (const field of Object.keys(this.registerForm.controls)) {
+      const msg = this.getFieldErrors(field);
+
+      if (msg) {
+        const prettyField = field.charAt(0).toUpperCase() + field.slice(1);
+        this.showAlert('error', `${prettyField}: ${msg}`);
+        break;
       }
 
-      this.pushError("No se pudo completar el registro");
-    });
-  }
-
-
-  private showFormErrors() {
-    const list: string[] = [];
-
-    Object.keys(this.registerForm.controls).forEach(field => {
-      const msg = this.getFieldErrors(field);
-      if (msg) list.push(msg);
-    });
-
-    this.errors.set(list);
-    this.autoClear();
-  }
-
-  private pushError(msg: string) {
-    this.errors.update(prev => [...prev, msg]);
-    this.autoClear();
-  }
-
-  private showSuccess(msg: string) {
-    this.errors.set([msg]);
-    this.autoClear();
+    }
   }
 
   private autoClear() {
