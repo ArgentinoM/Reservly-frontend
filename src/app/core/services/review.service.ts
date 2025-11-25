@@ -39,7 +39,6 @@ export class ReviewService {
     })
     .pipe(
       tap((resp) => this.reviewCache.set(key, resp)),
-      tap(x => console.log(x))
     );
   }
 

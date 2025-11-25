@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Observable, of, tap, catchError, throwError } from 'rxjs';
 import { Catalog } from '../interfaces/response-catalog.interface';
 import { PaginateResponse } from '../../core/interfaces/respose-paginate.interface';
-import { ApiResponse } from '../../core/interfaces/response.interface';
+import { ApiResponse, ErrorResponse } from '../../core/interfaces/response.interface';
 
 interface Options {
   page?: number;
@@ -90,12 +90,27 @@ export class CatalogService {
       formData.append('category_id', String(options.category_id ?? 0));
       formData.append('img', options.img);
 
-    return this.http.post<ApiResponse<Catalog>>(`${this.baseUrl}/${this.storeServicesEndpoint}`, formData).pipe(
-      catchError((error) => {
-      return throwError(() => error);
-      })
-    )
+    return this.http.post<ApiResponse<Catalog>>(`${this.baseUrl}/${this.storeServicesEndpoint}`, formData)
 
+  }
+
+  private extractErrorMessage(error: any): string {
+
+    if (typeof error.error?.errors === "string") {
+      return error.error.errors;
+    }
+
+    if (typeof error.error?.errors === "object") {
+      const errors = error.error.errors;
+      const firstKey = Object.keys(errors)[0];
+      return errors[firstKey][0];
+    }
+
+    if (error.error?.message) {
+      return error.error.message;
+    }
+
+    return "Ocurrió un error inesperado";
   }
 
 }

@@ -57,26 +57,6 @@ export class AuthService {
   register(data: any): Observable<boolean> {
     return this.http.post(`${baseUrl}/${registerEndpoint}`, data).pipe(
       map(() => true),
-      catchError((error) => {
-        let message = 'Ocurrió un error en el registro';
-
-        if (error.error) {
-
-          if (error.error.errors) {
-
-            const firstKey = Object.keys(error.error.errors)[0];
-            const firstErrorMsg = error.error.errors[firstKey][0];
-            message = firstErrorMsg;
-
-          } else if (error.error.message) {
-            message = error.error.message;
-          } else if (typeof error.error === 'string') {
-            message = error.error;
-          }
-        }
-
-        return throwError(() => new Error(message));
-      })
     );
   }
 

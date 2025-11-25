@@ -48,12 +48,10 @@ export class CreateServicesComponent {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
 
-  console.log(file);
 
   if (!file) return;
 
   if (file.size > 5 * 1024 * 1024) {
-    console.warn("Archivo demasiado grande");
     return;
   }
 

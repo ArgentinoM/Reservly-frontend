@@ -5,6 +5,7 @@ import { CatalogComponent } from "../../../shared/catalog/catalog.component";
 import { ListServicesPageComponent } from "../../../customer/pages/list-services-page/list-services-page.component";
 import { RouterLink } from '@angular/router';
 import { CatalogService } from '../../../customer/services/catalog.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 Chart.register(...registerables);
 
@@ -17,6 +18,7 @@ Chart.register(...registerables);
 export class HomeSellerComponent {
 
   catalogService = inject(CatalogService);
+  authService = inject(AuthService)
 
   salesChart!: Chart;
   revenueChart!: Chart;

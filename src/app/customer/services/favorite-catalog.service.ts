@@ -74,9 +74,6 @@ export class FavoriteService {
           });
         }
       }),
-      catchError((error : any) => {
-        return throwError(() => new Error(error))
-      })
     )
   }
 

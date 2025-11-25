@@ -72,7 +72,7 @@ export class RegisterPageComponent {
       error: (err: any) => {
         this.isPosting.set(false);
 
-        this.showAlert('error', err.message);
+        this.showAlert('error', err.error);
       }
     });
   }
@@ -97,10 +97,6 @@ export class RegisterPageComponent {
       }
 
     }
-  }
-
-  private autoClear() {
-    setTimeout(() => this.errors.set([]), 4000);
   }
 
   getFieldErrors(fieldName: string): string | null {

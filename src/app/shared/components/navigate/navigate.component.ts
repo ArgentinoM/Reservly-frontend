@@ -27,7 +27,7 @@ export class NavigateComponent {
   logout(){
     this.authService.logout().subscribe({
       next: () => this.routes.navigateByUrl('/'),
-      error: err => console.error('Error al cerrar sesión:', err)
+
     }
     )
   }

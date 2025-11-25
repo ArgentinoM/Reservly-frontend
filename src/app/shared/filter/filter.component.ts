@@ -37,8 +37,6 @@ export class FilterComponent{
     //   return;
     // }
 
-    console.log(this.filterForm.value.category);
-
     this.filterApplied.emit(this.filterForm.value);
   }
 

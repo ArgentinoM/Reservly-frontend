@@ -20,7 +20,7 @@ export class CategoriesService {
     return this.http.get<ApiResponse<Categories[]>>(
       `${this.baseUrl}/${this.getCategoryEndpoint}`
     ) .pipe(
-          tap(x => console.log('Respuesta las categorias:', x)),
+
           tap(resp => this.categoriesCache.set('categoria' , resp))
     );
   }
