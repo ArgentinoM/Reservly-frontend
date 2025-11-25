@@ -68,7 +68,7 @@ export class LoginPageComponent {
   private async redirectUser() {
     await firstValueFrom(this.authService.checkStatus());
 
-    if (this.authService.isSeller()) {
+    if (this.authService.roles()?.name.includes('seller')) {
       this.router.navigateByUrl('seller');
     } else {
       this.router.navigateByUrl('customer');

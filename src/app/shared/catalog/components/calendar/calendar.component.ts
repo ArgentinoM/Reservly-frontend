@@ -5,7 +5,6 @@ import { Component, OnInit, computed, signal } from '@angular/core';
   selector: 'app-calendar',
   imports: [CommonModule, DatePipe],
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.scss',
 })
 export class CalendarComponent implements OnInit {
 

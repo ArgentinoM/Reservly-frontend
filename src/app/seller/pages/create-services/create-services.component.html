@@ -172,6 +172,8 @@
   </div>
 </section>
 
-<!-- @if (error() !== null) {
-<p class="fixed top-0 z-50 right-0 px-10 py-2 bg-error">{{error() }}</p>
-} -->
+@if (alertVisible()) {
+<notifications-component [type]="alertType()"
+  (close)="alertVisible.set(false)"
+  [message]="alertMessage()" />
+}

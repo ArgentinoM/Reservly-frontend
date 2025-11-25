@@ -4,6 +4,7 @@ import { FavoriteServicesPageComponent } from "../favorite-services-page/favorit
 import { CatalogService } from '../../services/catalog.service';
 import { RouterLink } from "@angular/router";
 import { FavoriteService } from '../../services/favorite-catalog.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-home-page',
@@ -14,5 +15,6 @@ export class HomePageComponent {
 
   catalogService = inject(CatalogService);
   favoriteService = inject(FavoriteService);
+  authService =  inject(AuthService);
 
 }

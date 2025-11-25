@@ -92,9 +92,7 @@ export class CatalogService {
 
     return this.http.post<ApiResponse<Catalog>>(`${this.baseUrl}/${this.storeServicesEndpoint}`, formData).pipe(
       catchError((error) => {
-      return throwError(() => ({
-        message: error
-      }));
+      return throwError(() => error);
       })
     )
 

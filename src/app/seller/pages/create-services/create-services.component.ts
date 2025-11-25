@@ -1,17 +1,16 @@
-import { CurrencyPipe, JsonPipe, Location } from '@angular/common';
+import { CurrencyPipe, Location } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { CategoriesService } from '../../../core/services/categories-service.service';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { CatalogListComponent } from "../../../shared/catalog/catalog-list/catalog-list.component";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogService } from '../../../customer/services/catalog.service';
-import { tap } from 'rxjs';
+import { ApiResponse, ErrorResponse, MessageResponse } from '../../../core/interfaces/response.interface';
 import { NotificationsComponent } from "../../../shared/components/notifications/notifications.component";
-import { MessageResponse } from '../../../core/interfaces/response.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-services',
-  imports: [CatalogListComponent ,CurrencyPipe, ReactiveFormsModule, NotificationsComponent],
+  imports: [CurrencyPipe, ReactiveFormsModule, NotificationsComponent],
   templateUrl: './create-services.component.html',
 })
 export class CreateServicesComponent {
@@ -23,8 +22,9 @@ export class CreateServicesComponent {
   private fb = inject(FormBuilder);
 
   imgPreview = signal<string | null>(null);
-  message = signal<string | null>(null);
-  error = signal<string | null>(null);
+  alertType = signal<'success' | 'error'> ('success');
+  alertMessage = signal<string>('')
+  alertVisible = signal<boolean>(false);
 
 
 
@@ -77,18 +77,13 @@ export class CreateServicesComponent {
       duration,
       category_id,
       img
-    }).subscribe((resp) => {
-          //   {
-    //   next: (resp) => {
-    //     this.message.set(resp.message);
-
-    //     // tap(() => {
-    //     //   this.location.back
-    //     // })
-    //   },
-    //   error: (err) => {
-    //     this.error.set(err.MessageResponse);
-    //   }
+    }).subscribe({
+      next: (resp) => {
+        this.handleSucces(resp);
+      },
+      error: (error) => {
+        this.handleError(error)
+      }
     }
     )
 
@@ -97,5 +92,23 @@ export class CreateServicesComponent {
   back(){
     this.location.back()
   }
+
+  private handleSucces<T>(resp : ApiResponse<T> | MessageResponse){
+    this.alertVisible.set(true)
+    this.alertType.set('success');
+
+    this.alertMessage.set(resp.message);
+
+    setTimeout(() => {
+      this.location.back()
+    }, 2000);
+  }
+
+  private handleError(resp : ErrorResponse){
+    this.alertVisible.set(true)
+    this.alertType.set('error');
+    this.alertMessage.set(resp.error)
+  }
+
 
 }

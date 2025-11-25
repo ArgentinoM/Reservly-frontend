@@ -10,6 +10,7 @@
       loading="lazy" />
 
     <!-- Icon favorite -->
+    @if (router.url.includes('customer')) {
     <i (click)="toggleFavorite()"
       class="fa-heart text-[1.3rem] absolute top-3 right-3 cursor-pointer transition-all duration-300"
       [ngClass]="{
@@ -17,6 +18,7 @@
         'fa-regular text-text-primary hover:text-primary': !isFavorite()
       }">
     </i>
+    }
   </div>
 
   <!-- info -->
@@ -37,7 +39,7 @@
 
 
       @if (RatingAverage() === null) {
-      <p class="text-gray-300 text-[.5rem]">Sin ranting</p>
+      <p class="opacity-50 text-[1rem]">Sin ranting</p>
       }@else {
       <div class="flex items-center gap-[2px] text-yellow-400">
         <span class="mr-1 text-xs text-gray-300">{{ RatingAverage()}}</span>
@@ -55,11 +57,23 @@
       </span>
 
 
-      <a [routerLink]="['' + toSlug(ServiceName())]"
-        [state]="{id: ServiceId()}"
+      <a [routerLink]="
+        router.url.includes('services') ? [toSlug(ServiceName())] :
+        router.url.includes('favorit') ? ['../services', toSlug(ServiceName())] :
+        ['services', toSlug(ServiceName())]"
+        [state]="{ id: ServiceId() }"
         class="bg-primary mt-1 cursor-pointer text-center text-text-primary py-1 rounded-md hover:bg-accent hover:text-gray-800 transition">
         Más info
       </a>
+
+
+
     </div>
   </div>
 </div>
+
+@if (alertVisible()) {
+<notifications-component (close)="alertVisible.set(false)"
+  [type]="alertType()"
+  [message]="alertMessage()" />
+}

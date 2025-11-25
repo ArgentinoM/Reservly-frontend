@@ -1,7 +1,7 @@
 import { CurrencyPipe, Location } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { CatalogService } from '../../../customer/services/catalog.service';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { SpinerComponent } from "../../components/spiner/spiner.component";
 import { ReviewService } from '../../../core/services/review.service';
@@ -18,7 +18,7 @@ export class InfoCatalogComponent{
   private location = inject(Location);
   private catalogService = inject(CatalogService);
   private reviewService = inject(ReviewService);
-  private router = inject(Router);
+  router = inject(Router);
 
   private idService = signal(history.state.id)
 

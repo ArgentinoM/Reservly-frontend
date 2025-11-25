@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Favorite } from '../interfaces/response-favorite.interface';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { PaginateResponse } from '../../core/interfaces/respose-paginate.interface';
 import { ApiResponse, MessageResponse } from '../../core/interfaces/response.interface';
 
@@ -73,6 +73,9 @@ export class FavoriteService {
             data: [newFav, ...page.data]
           });
         }
+      }),
+      catchError((error : any) => {
+        return throwError(() => new Error(error))
       })
     )
   }

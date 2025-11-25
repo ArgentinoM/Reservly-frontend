@@ -47,7 +47,7 @@ export class AuthService {
 
   user = computed(() => this._user());
   token = computed(this._token);
-  isSeller = computed(() => this._user()?.rol.name.includes('seller') ?? false);
+  roles = computed(() => this._user()?.rol);
 
   isLoggedInLocal(): boolean {
     const token = localStorage.getItem('token');
@@ -153,6 +153,7 @@ export class AuthService {
 
   private handleAuthError(error: any) {
     this.logout();
+
     return of(false);
   }
 }

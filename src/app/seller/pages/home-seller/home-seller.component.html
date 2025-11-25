@@ -1,0 +1,91 @@
+<section class="p-6 sm:p-10 flex flex-col gap-10">
+
+  <!-- Info Seller -->
+  <div>
+    <h2 class="text-2xl font-semibold text-primary">Hola, Juan Pérez</h2>
+    <p class="text-gray-400 mt-1">
+      Bienvenido de nuevo. Aquí tienes un resumen de tu actividad como vendedor.
+    </p>
+
+    <div class="grid grid-cols-2 gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-4">
+
+      <div class="bg-tercery p-4 rounded-xl text-center col-span-1">
+        <h3 class="text-xl font-bold text-primary">{{catalogService.total()}}</h3>
+        <p class="text-sm text-gray-400">Servicios subidos</p>
+      </div>
+
+      <div class="bg-tercery p-4 rounded-xl text-center col-span-1">
+        <h3 class="text-xl font-bold text-primary">87</h3>
+        <p class="text-sm text-gray-400">Ventas realizadas</p>
+      </div>
+
+      <div class="bg-tercery p-4 rounded-xl text-center col-span-1">
+        <h3 class="text-xl font-bold text-primary">$14,560</h3>
+        <p class="text-sm text-gray-400">Ingresos generados</p>
+      </div>
+
+      <div class="bg-tercery p-4 rounded-xl text-center col-span-1">
+        <h3 class="text-xl font-bold text-primary">5</h3>
+        <p class="text-sm text-gray-400">Reservaciones activas</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Graphs -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+
+    <div class="bg-tercery p-4 rounded-xl">
+      <h3 class="text-lg font-semibold text-primary mb-4">Ventas por mes</h3>
+      <canvas id="salesChart"></canvas>
+    </div>
+
+    <div class="bg-tercery p-4 rounded-xl">
+      <h3 class="text-lg font-semibold text-primary mb-4">Ingresos por mes</h3>
+      <canvas id="revenueChart"></canvas>
+    </div>
+
+  </div>
+
+  <!-- Top Services -->
+  <div>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+      <h2 class="text-xl font-semibold text-primary">Tus servicios más vendidos</h2>
+      <a [routerLink]="['services']"
+        class="text-sm text-primary hover:underline cursor-pointer">Ver todos</a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <div class="bg-tercery p-4 rounded-xl text-center">
+        <h3 class="text-lg font-bold text-primary">Servicio de Fotografía</h3>
+        <p class="text-sm text-gray-400">34 ventas</p>
+      </div>
+      <div class="bg-tercery p-4 rounded-xl text-center">
+        <h3 class="text-lg font-bold text-primary">Diseño de Logo</h3>
+        <p class="text-sm text-gray-400">28 ventas</p>
+      </div>
+      <div class="bg-tercery p-4 rounded-xl text-center">
+        <h3 class="text-lg font-bold text-primary">Redacción de Contenido</h3>
+        <p class="text-sm text-gray-400">18 ventas</p>
+      </div>
+      <div class="bg-tercery p-4 rounded-xl text-center">
+        <h3 class="text-lg font-bold text-primary">Clases de Yoga Online</h3>
+        <p class="text-sm text-gray-400">12 ventas</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <div>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+      <h2 class="text-xl font-semibold text-primary">Tus servicios más recientes</h2>
+      <a [routerLink]="'services'"
+        class="text-sm text-primary hover:underline cursor-pointer">Ver todos</a>
+    </div>
+
+    <list-services-page [perPage]="4"
+      [minimal]="true" />
+  </div>
+
+</section>
