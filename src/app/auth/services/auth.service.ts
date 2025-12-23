@@ -1,11 +1,11 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { User } from '../interfaces/user';
 import { HttpClient } from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { catchError, map, Observable, of, shareReplay } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { CatalogService } from '../../core/services/catalog.service';
 import { AuthResponse } from '../interfaces/auth-response';
-import { rxResource } from '@angular/core/rxjs-interop'
-import { CatalogService } from '../../customer/services/catalog.service';
+import { User } from '../interfaces/user';
 
 type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated'
 const baseUrl = environment.url_base;
@@ -98,7 +98,8 @@ export class AuthService {
         this.handleAuthError(error);
         this._checkStatusCache = { value: false, expiresAt: now + this.CACHE_DURATION };
         return of(false);
-      })
+      }),
+      shareReplay(1)
     );
   }
 

@@ -1,11 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
-import { CatalogListComponent } from "../../../shared/catalog/catalog-list/catalog-list.component";
-import { CatalogComponent } from "../../../shared/catalog/catalog.component";
-import { ListServicesPageComponent } from "../../../customer/pages/list-services-page/list-services-page.component";
 import { RouterLink } from '@angular/router';
-import { CatalogService } from '../../../customer/services/catalog.service';
+import { Chart, registerables } from 'chart.js';
 import { AuthService } from '../../../auth/services/auth.service';
+import { CatalogService } from '../../../core/services/catalog.service';
+import { ListServicesPageComponent } from "../../../customer/pages/list-services-page/list-services-page.component";
 
 Chart.register(...registerables);
 

@@ -1,9 +1,9 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Observable, tap } from 'rxjs';
-import { Review } from '../interfaces/review.interface';
 import { PaginateResponse } from '../interfaces/respose-paginate.interface';
+import { Review } from '../interfaces/review.interface';
 
 interface Options {
   service_id: number,
@@ -30,6 +30,12 @@ export class ReviewService {
     } = options
 
     const key = `${service_id}-${page}-${perPage}`;
+
+    const cached = this.reviewCache.get(key);
+
+    if (cached) {
+      return of(cached);
+    }
 
     return this.http.get<PaginateResponse<Review>>(`${this.baseUrl}/${this.getReviewEndpoint}/${service_id}`, {
       params: {

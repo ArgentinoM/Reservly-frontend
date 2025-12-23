@@ -1,10 +1,20 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit, computed, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, RouterLink],
   templateUrl: './calendar.component.html',
+  styles: [`
+
+    .activate{
+      background-color: #34D399;
+      color: #E2E8F0;
+      transition: all 0.5s;
+    }
+
+  `]
 })
 export class CalendarComponent implements OnInit {
 
@@ -17,6 +27,7 @@ export class CalendarComponent implements OnInit {
   currentYear = signal(this.today.getFullYear());
   currentMonth = signal(this.today.getMonth());
   arrayDays = signal<(number | '')[]>([]);
+  selectedDay = signal<number | ''>('');
 
 
   lastDay = computed(() =>
@@ -35,6 +46,10 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.generateCalendar();
+  }
+
+  selectDay(day : number | ''){
+    this.selectedDay.set(day);
   }
 
 

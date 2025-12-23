@@ -9,7 +9,7 @@ export interface Catalog {
   duration: number;
   img:      string;
   user:     User;
-  category: string;
+  category: number;
   rating:   Rating | null;
 }
 

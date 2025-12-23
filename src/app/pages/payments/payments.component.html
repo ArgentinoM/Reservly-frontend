@@ -1,0 +1,84 @@
+<section class="min-h-screen flex justify-center items-center px-4">
+  <form
+    class="w-full max-w-md bg-secondary p-8 rounded-3xl shadow-2xl shadow-primary/20 flex flex-col gap-6"
+    (ngSubmit)="onSubmit()"
+  >
+
+    <!-- Título -->
+    <h2 class="text-2xl font-bold text-primary text-center">
+      Información de pago
+    </h2>
+
+    <!-- Nombre -->
+    <div class="flex flex-col gap-1">
+      <label for="cardHolderName" class="text-sm font-medium opacity-80">
+        Nombre del titular
+      </label>
+      <input
+        type="text"
+        id="cardHolderName"
+        name="cardHolderName"
+        required
+        placeholder="Juan Pérez"
+        class="bg-tercery rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary transition"
+      />
+    </div>
+
+    <!-- Número tarjeta -->
+    <div class="flex flex-col gap-1">
+      <label for="cardNumber" class="text-sm font-medium opacity-80">
+        Número de tarjeta
+      </label>
+      <input
+        type="text"
+        id="cardNumber"
+        name="cardNumber"
+        required
+        placeholder="1234 5678 9012 3456"
+        class="bg-tercery rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary transition"
+      />
+    </div>
+
+    <!-- Expiración + CVV -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1">
+        <label for="expiryDate" class="text-sm font-medium opacity-80">
+          Expiración
+        </label>
+        <input
+          type="text"
+          id="expiryDate"
+          name="expiryDate"
+          required
+          placeholder="MM/AA"
+          class="bg-tercery rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary transition"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="cvv" class="text-sm font-medium opacity-80">
+          CVV
+        </label>
+        <input
+          type="text"
+          id="cvv"
+          name="cvv"
+          required
+          placeholder="123"
+          class="bg-tercery rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary transition"
+        />
+      </div>
+    </div>
+
+    <!-- Botón -->
+    <button
+      type="submit"
+      class="mt-4 flex items-center justify-center cursor-pointer gap-2 bg-primary text-white py-3 rounded-xl font-semibold shadow-md
+             hover:bg-primary/90 hover:shadow-lg transition-all duration-300 active:scale-95"
+    >
+      <i class="fa-solid fa-credit-card"></i>
+      Pagar ahora
+    </button>
+
+  </form>
+</section>

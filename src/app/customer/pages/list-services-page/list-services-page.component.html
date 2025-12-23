@@ -6,10 +6,15 @@
   <div class="flex-1 p-6 transition-all duration-500">
 
     <!-- Card services -->
-    <catalog [data]="catalogResource"
-      [title]="'Nuestros Servicios'"
-      [minimal]="minimal()"
-      [isLoading]="isLoading()" />
+  <catalog
+    [data]="catalogResource"
+    [title]="'Nuestros Servicios'"
+    [minimal]="minimal()"
+    [isLoading]="isLoading()"
+    (filtersChanged)="applyFilters($event)"
+  />
+
+
   </div>
 
 </section>

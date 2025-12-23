@@ -1,24 +1,20 @@
-import { Component, computed, inject, input, OnInit, ResourceRef, signal } from '@angular/core';
+import { Component, computed, inject, input, ResourceRef, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { CatalogComponent } from "../../../shared/catalog/catalog.component";
 import { PaginateService } from '../../../shared/components/pagination/pagination.service';
 import { FavoriteService } from '../../services/favorite-catalog.service';
-import { CatalogComponent } from "../../../shared/catalog/catalog.component";
 
-import { Catalog } from '../../interfaces/response-catalog.interface';
-import { PaginateResponse } from '../../../core/interfaces/respose-paginate.interface';
 import { finalize } from 'rxjs';
-import { PaginationComponent } from "../../../shared/components/pagination/pagination.component";
+import { PaginateResponse } from '../../../core/interfaces/respose-paginate.interface';
+import { Catalog } from '../../interfaces/response-catalog.interface';
 
 
 @Component({
   selector: 'favorite-services-page',
-  imports: [CatalogComponent, PaginationComponent],
+  imports: [CatalogComponent],
   templateUrl: './favorite-services-page.component.html',
 })
-export class FavoriteServicesPageComponent implements OnInit {
-  ngOnInit(): void {
-    this.favoriteResource.reload();
-  }
+export class FavoriteServicesPageComponent {
 
   favoriteService = inject(FavoriteService);
   paginateService = inject(PaginateService);
@@ -33,7 +29,6 @@ export class FavoriteServicesPageComponent implements OnInit {
       perPage: this.perPage(),
     }),
     loader: ({ request }) => {
-
       this.isLoading.set(true);
 
       return this.favoriteService.getFavorites({
@@ -44,7 +39,6 @@ export class FavoriteServicesPageComponent implements OnInit {
       );
     }
   });
-
 
   catalogFromFavorites = {
     value: computed(() => {

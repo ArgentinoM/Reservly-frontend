@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { NotAuthenticatedGuard } from './core/guards/not-authenticated.guard';
-import { PerfilPageComponent } from './pages/perfil-page/perfil-page.component';
-import { HomePageGlobalComponent } from './pages/home-page-global/home-page-global.component';
 import { RolGuard } from './core/guards/rol.guard';
+import { HomePageGlobalComponent } from './pages/home-page-global/home-page-global.component';
+import { PerfilPageComponent } from './pages/perfil-page/perfil-page.component';
 
 export const routes: Routes = [
   {

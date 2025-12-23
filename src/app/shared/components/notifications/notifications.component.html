@@ -19,9 +19,21 @@
       {{ message() }}
     </p>
 
-    <button (click)="closeModal()"
-      class="bg-primary cursor-pointer text-text-primary px-6 py-2 rounded-lg font-medium hover:bg-accent hover:text-tercery duration-300 transition-all">
-      Cerrar
-    </button>
+    <div class="flex gap-2 justify-center">
+
+    @if (type() === 'warning') {
+      <button
+        (click)="confirmAction()"
+        class="bg-success cursor-pointer text-black px-6 py-2 rounded-lg font-medium hover:bg-success/90 hover:text-tercery duration-300 transition-all">
+        Aceptar
+      </button>
+    }
+
+      <button (click)="closeModal()"
+        class="bg-primary cursor-pointer text-black px-6 py-2 rounded-lg font-medium hover:bg-accent hover:text-tercery duration-300 transition-all">
+        Cerrar
+      </button>
+    </div>
+
   </div>
 </div>

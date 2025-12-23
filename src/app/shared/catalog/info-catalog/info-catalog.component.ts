@@ -1,16 +1,17 @@
 import { CurrencyPipe, Location } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { CatalogService } from '../../../customer/services/catalog.service';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
-import { SpinerComponent } from "../../components/spiner/spiner.component";
+import { CatalogService } from '../../../core/services/catalog.service';
 import { ReviewService } from '../../../core/services/review.service';
+import { NotificationsComponent } from "../../components/notifications/notifications.component";
+import { SpinerComponent } from "../../components/spiner/spiner.component";
 import { CalendarComponent } from "../components/calendar/calendar.component";
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-info-catalog',
-  imports: [SpinerComponent, CurrencyPipe, CalendarComponent],
+  imports: [SpinerComponent, CurrencyPipe, CalendarComponent, RouterLink, NotificationsComponent],
   templateUrl: './info-catalog.component.html',
 })
 export class InfoCatalogComponent{
@@ -18,13 +19,21 @@ export class InfoCatalogComponent{
   private location = inject(Location);
   private catalogService = inject(CatalogService);
   private reviewService = inject(ReviewService);
-  router = inject(Router);
 
   private idService = signal(history.state.id)
 
+  router = inject(Router);
   isLoading =  signal<boolean>(false);
   stars = [1, 2, 3, 4, 5];
-  isCustomer = signal<boolean>(this.router.url.includes('customer'))
+  isCustomer = signal<boolean>(this.router.url.includes('customer'));
+
+  errors = signal<string[]>([]);
+  isPosting = signal(false);
+  alertVisible = signal(false);
+  alertType: 'success' | 'error' | 'warning' = 'success';
+  alertMessage = signal('');
+  pendingDelete = signal(false);
+
 
   catalogResource = rxResource({
     request: () => ({
@@ -44,7 +53,7 @@ export class InfoCatalogComponent{
 
   reviewResource = rxResource({
     request: () => ({
-      service_id: this.idService(),
+      service_id: this.idService()
     }),
     loader: ({request}) => {
       return this.reviewService.getReview({
@@ -65,8 +74,44 @@ export class InfoCatalogComponent{
     }
   }
 
+  confirmDelete(){
+    this.pendingDelete.set(false);
+    this.alertVisible.set(false);
+
+    this.catalogService.deleteService(this.idService())
+    .subscribe({
+      next: (resp) => {
+        this.showAlert('success', resp.message);
+
+        setTimeout(() => {
+          this.location.back();
+        }, 3000);
+
+      },
+      error: (err) => {
+        this.showAlert('error', err.error || 'No se pudo eliminar el servicio');
+      }
+    });
+  }
+
+  deleteService() {
+    this.pendingDelete.set(true);
+
+    this.showAlert(
+      'warning',
+      '¿Estás seguro de que deseas eliminar este servicio? Esta acción no se puede deshacer.'
+    );
+  }
+
   goBack(){
     this.location.back();
   }
 
+  private showAlert(type: 'success' | 'error' | 'warning', message: string) {
+    this.alertType = type;
+    this.alertMessage.set(message);
+    this.alertVisible.set(true);
+
+    setTimeout(() => this.alertVisible.set(false), 5000);
+  }
 }

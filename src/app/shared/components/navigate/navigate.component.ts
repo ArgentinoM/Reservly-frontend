@@ -1,16 +1,15 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, inject, input, signal, WritableSignal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { ItemsNavigate } from '../../../core/interfaces/itemNavigate.interface';
 import { AuthService } from '../../../auth/services/auth.service';
-import { TitleCasePipe } from '@angular/common';
-
-
+import { ItemsNavigate } from '../../../core/interfaces/itemNavigate.interface';
 
 @Component({
   selector: 'navigate',
   imports: [RouterModule ,TitleCasePipe],
   templateUrl: './navigate.component.html',
 })
+
 export class NavigateComponent {
 
   authService = inject(AuthService);

@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
-import { CatalogComponent } from "../../../shared/catalog/catalog.component";
 import { rxResource } from '@angular/core/rxjs-interop';
-import { CatalogService } from '../../../customer/services/catalog.service';
-import { PaginateService } from '../../../shared/components/pagination/pagination.service';
 import { finalize } from 'rxjs';
+import { CatalogService } from '../../../core/services/catalog.service';
+import { CatalogComponent } from "../../../shared/catalog/catalog.component";
+import { PaginateService } from '../../../shared/components/pagination/pagination.service';
 
 @Component({
   selector: 'app-services-seller',

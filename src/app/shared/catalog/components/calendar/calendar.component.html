@@ -33,6 +33,8 @@
 
       <button
         class="p-2 sm:p-4 duration-300 cursor-pointer rounded-2xl hover:bg-primary disabled:cursor-no-drop disabled:opacity-50 text-sm sm:text-base"
+        (click)="selectDay(item)"
+        [class.activate]="selectedDay() === item "
         [ngClass]="isToday(item) ? 'bg-secondary text-white' : ''"
         [disabled]="isPastDay(item)">
         {{ item }}
@@ -79,7 +81,12 @@
 
         <div class="flex justify-between">
           <b>Fecha:</b>
-          <p>12-Febrero-2026</p>
+          @if (selectedDay() !== '') {
+          <p>{{selectedDay()}}-{{currentMonth() + 1 | date: 'MMMM'}}-{{currentYear()}}</p>
+          }@else{
+          <p>Día no definido</p>
+          }
+
         </div>
 
         <div class="flex justify-between">
@@ -92,10 +99,11 @@
         *Llegar 5 minutos antes de la hora estimada*
       </p>
 
-      <button
-        class="mt-4 sm:mt-5 w-full px-4 sm:px-6 py-2 sm:py-3 cursor-pointer border border-primary rounded-xl font-semibold hover:bg-success/40 transition">
+      <a
+        [routerLink]="'/customer/payments'"
+        class="mt-4 sm:mt-5 w-full px-4 text-center sm:px-6 py-2 sm:py-3 cursor-pointer border border-primary rounded-xl font-semibold hover:bg-success/40 transition">
         Reservar ahora
-      </button>
+      </a>
     </div>
 
   </div>

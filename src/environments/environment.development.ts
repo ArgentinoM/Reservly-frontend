@@ -15,6 +15,8 @@ export const environment = {
   // Services
   getServices_endpoint: 'services',
   storeServices_endpoint: 'serviceStore',
+  updateServices_endpoint: 'serviceUpdate',
+  deleteServices_endpoint: 'serviceDelete',
 
   // Favorite
    getFavorite_endpoint: 'favoriteService',

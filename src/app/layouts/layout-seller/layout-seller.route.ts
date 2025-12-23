@@ -1,10 +1,9 @@
 import { Routes } from '@angular/router';
-import { ListServicesPageComponent } from '../../customer/pages/list-services-page/list-services-page.component';
-import { LayoutSellerComponent } from './layout-seller.component';
+import { CreateUpdateServicesComponent } from '../../seller/pages/createUpdate-services/createUpdate-services.component';
+import { HomeSellerComponent } from '../../seller/pages/home-seller/home-seller.component';
 import { ServicesSellerComponent } from '../../seller/pages/services-seller/services-seller.component';
 import { InfoCatalogComponent } from '../../shared/catalog/info-catalog/info-catalog.component';
-import { CreateServicesComponent } from '../../seller/pages/create-services/create-services.component';
-import { HomeSellerComponent } from '../../seller/pages/home-seller/home-seller.component';
+import { LayoutSellerComponent } from './layout-seller.component';
 
 
 
@@ -27,7 +26,11 @@ export const layoutSellerRoutes: Routes = [
       },
       {
         path: 'create-services',
-        component: CreateServicesComponent
+        component: CreateUpdateServicesComponent
+      },
+      {
+        path: 'update-service/:id',
+        component: CreateUpdateServicesComponent
       }
     ]
   }
