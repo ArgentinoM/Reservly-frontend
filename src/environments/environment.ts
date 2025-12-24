@@ -1,4 +1,4 @@
-const url = 'https://reservly-backend-production.up.railway.app';
+const url = 'https://reservly-backend.onrender.com';
 
 export const environment = {
   production: true,

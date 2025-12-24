@@ -16,24 +16,28 @@
       </button>
 
       <div class=" flex gap-5" [class.hidden]="(router.url.includes('customer'))">
-        <a [routerLink]="['/seller/update-service', catalogResource.value()?.data?.id]" class="flex items-center cursor-pointer gap-2 px-5 py-3 bg-primary text-white rounded-xl shadow-md
+        <a [routerLink]="['/seller/update-service', catalogResource.value()?.data?.id]"
+          class="flex items-center justify-center gap-2 px-4 sm:px-5 py-3
+           bg-primary text-white rounded-xl shadow-md
            hover:bg-primary/90 hover:shadow-lg transition-all duration-300
            active:scale-95 font-semibold text-sm">
-          <i class="fa-solid fa-pen"></i>
-          Actualizar Servicio
+
+            <i class="fa-solid fa-pen text-base"></i>
+            <span class="hidden sm:inline">Actualizar Servicio</span>
         </a>
 
-        <button (click)="deleteService()"
-        class="flex items-center cursor-pointer gap-2 px-5 py-3 bg-error text-white rounded-xl shadow-md
-           hover:bg-error/90 hover:shadow-lg transition-all duration-300
-           active:scale-95 font-semibold text-sm">
+        <button
+          (click)="deleteService()"
+          class="flex items-center justify-center gap-2 px-4 sm:px-5 py-3
+                  bg-error text-white rounded-xl shadow-md
+                  hover:bg-error/90 hover:shadow-lg transition-all duration-300
+                  active:scale-95 font-semibold text-sm">
 
-          <i class="fa-solid fa-trash"></i>
-          <span class="font-semibold">Eliminar</span>
-
+          <i class="fa-solid fa-trash text-base"></i>
+          <span class="hidden sm:inline">Eliminar</span>
         </button>
-      </div>
 
+      </div>
     </div>
 
 
@@ -50,8 +54,11 @@
         <div class=" h-full flex flex-col justify-between">
           <div class="flex items-center justify-between">
             <h1 class="text-4xl font-bold text-primary">{{catalogResource.value()?.data?.name}}</h1>
-            <i class="fa-heart fa-solid text-red-500 text-[1.7rem] cursor-pointer transition-all duration-300">
-            </i>
+
+            @if (router.url.includes('customer')) {
+              <i class="fa-heart fa-solid text-red-500 text-[1.7rem] cursor-pointer transition-all duration-300"></i>
+            }
+
           </div>
 
           <!-- Rating -->
