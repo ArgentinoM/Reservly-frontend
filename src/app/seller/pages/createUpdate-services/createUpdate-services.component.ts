@@ -4,12 +4,13 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
-import { CreateUpdateOptions } from '../../../core/interfaces/CreateUpdateOptions.interfaces';
+import { CreateOptions } from '../../../core/interfaces/CreateOptions.interfaces';
 import { ApiResponse, ErrorResponse, MessageResponse } from '../../../core/interfaces/response.interface';
 import { CatalogService } from '../../../core/services/catalog.service';
 import { CategoriesService } from '../../../core/services/categories-service.service';
 import { NotificationsComponent } from "../../../shared/components/notifications/notifications.component";
 import { SpinerComponent } from "../../../shared/components/spiner/spiner.component";
+import { FormErrorService } from '../../../shared/services/from-error.service';
 
 @Component({
   selector: 'app-create-services',
@@ -17,6 +18,7 @@ import { SpinerComponent } from "../../../shared/components/spiner/spiner.compon
   templateUrl: './createUpdate-services.component.html',
 })
 export class CreateUpdateServicesComponent {
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
@@ -27,24 +29,22 @@ export class CreateUpdateServicesComponent {
     }
   }
 
-
   private location = inject(Location);
   private categoriesService = inject(CategoriesService);
   private catalogService = inject(CatalogService);
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
+  private formErrorService = inject(FormErrorService);
 
   isEditMode = signal(false);
   serviceId = signal<number | null>(null);
 
   isLoading = signal(false);
 
-
   imgPreview = signal<string | null>(null);
   alertType = signal<'success' | 'error'> ('success');
   alertMessage = signal<string>('')
   alertVisible = signal<boolean>(false);
-
 
 
   FormActions = this.fb.group({
@@ -95,23 +95,29 @@ export class CreateUpdateServicesComponent {
 
 
   createService(){
+
+    if(this.FormActions.invalid){
+      this.alertVisible.set(true);
+      this.alertType.set('error');
+      this.alertMessage.set(this.getErrorMessage());
+      return;
+    }
+
     const { name, desc, price, duration, category_id , img } = this.FormActions.value;
 
-      this.isLoading.set(true);
-
+    this.isLoading.set(true);
 
     this.catalogService.createService({
-      name,
-      desc,
-      price,
-      duration,
-      category_id,
-      img
+      name: name!,
+      desc: desc!,
+      price: price!,
+      duration: duration!,
+      category_id: category_id!,
+      img: img!,
     }).pipe(
       finalize(() => this.isLoading.set(false))
     ).subscribe({
       next: (resp) => {
-
         this.handleSucces(resp);
       },
       error: (error) => {
@@ -125,6 +131,13 @@ export class CreateUpdateServicesComponent {
   updateService() {
     if (!this.serviceId()) return;
 
+    if(this.FormActions.invalid){
+      this.alertVisible.set(true);
+      this.alertType.set('error');
+      this.alertMessage.set(this.getErrorMessage());
+      return;
+    }
+
     const changes = this.getChangedValues();
 
     if (Object.keys(changes).length === 0) {
@@ -136,7 +149,7 @@ export class CreateUpdateServicesComponent {
 
     this.isLoading.set(true);
 
-    let payload: CreateUpdateOptions | FormData = changes;
+    let payload: Partial<CreateOptions> | FormData = changes;
 
     if (changes.img) {
       const formData = new FormData();
@@ -159,9 +172,8 @@ export class CreateUpdateServicesComponent {
 
   loadService(id: number) {
     this.catalogService.getServicesById(id).subscribe(resp => {
-      const service = resp.data;
 
-      console.log(service);
+      const service = resp.data;
 
       this.FormActions.patchValue({
         name: service.name,
@@ -170,6 +182,9 @@ export class CreateUpdateServicesComponent {
         duration: service.duration,
         category_id: service.category,
       });
+
+      this.FormActions.get('img')?.clearValidators();
+      this.FormActions.get('img')?.updateValueAndValidity();
 
       this.imgPreview.set(service.img);
     });
@@ -197,8 +212,40 @@ export class CreateUpdateServicesComponent {
     this.alertMessage.set(resp.error)
   }
 
+  private readonly fromErrors: Record<string, Record<string, string>> = {
+    name: {
+      required: 'El nombre es obligatorio',
+      maxlength: 'El nombre no puede tener más de 50 caracteres',
+    },
+    desc: {
+      required: 'La descripción es obligatoria',
+    },
+    price: {
+      required: 'El precio es obligatorio',
+      min: 'El precio mínimo es de 200',
+    },
+    duration: {
+      required: 'La duración es obligatoria',
+      max: 'La duración máxima es de 24 horas',
+    },
+    category_id: {
+      required: 'La categoría es obligatoria',
+    },
+    img: {
+      required: 'La imagen es obligatoria',
+    }
+  }
 
-  private getChangedValues(): CreateUpdateOptions {
+  private getErrorMessage(): string {
+
+    return this.formErrorService.getErrorMessage(
+      this.FormActions.controls,
+      this.fromErrors
+    );
+
+  }
+
+  private getChangedValues(): CreateOptions | Record<string, any> {
     const changed: Record<string, any> = {};
 
     Object.keys(this.FormActions.controls).forEach((key) => {

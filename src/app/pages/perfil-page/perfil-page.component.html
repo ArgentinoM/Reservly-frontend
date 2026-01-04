@@ -1,69 +1,218 @@
-<div class="min-h-[calc(100vh-5rem)] bg-background p-6 flex justify-center">
-  <div class="w-full max-w-4xl flex flex-col gap-6">
+@if (isLoading()) {
+  <spiner />
+}@else {
+  <div class="min-h-[calc(100vh-5rem)] bg-background p-6 flex justify-center">
+  <div class="w-full max-w-6xl flex flex-col gap-6 min-h-full">
 
     <!-- Back -->
-    <div class="flex  items-center">
-      <button (click)="goBack()"
-        class="flex cursor-pointer items-center gap-2 text-text-primary hover:text-primary transition">
+    <div class="flex items-center">
+      <button
+        (click)="goBack()"
+        class="flex items-center cursor-pointer gap-2 text-text-primary hover:text-primary transition">
         <i class="fa-solid fa-arrow-left"></i>
         <span>Regresar</span>
       </button>
     </div>
 
-    <!-- Perfil principal -->
-    <div
-      class="bg-secondary border overflow-y-hidden border-tercery rounded-xl shadow-md p-6 flex flex-col md:flex-row items-center gap-6">
-      <img
-        [src]="user()?.img ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
-        alt="Foto de perfil"
-        class="w-32 h-32 rounded-full object-cover shadow-primary/50 shadow-2xl" />
+    <!-- Contenido -->
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
 
-      <div class="flex-1  text-center md:text-left">
-        <h2 class="text-2xl mb-4 font-semibold text-text-primary">{{user()?.name}} {{user()?.surname}}</h2>
-        <p class="text-gray-400">{{user()?.rol?.name}}</p>
-        <p class="text-gray-400">{{user()?.email}}</p>
+      <!-- PERFIL -->
+      <div
+        class="relative h-full bg-secondary border border-tercery rounded-xl p-8
+               flex flex-col justify-center gap-8
+               shadow-md hover:shadow-xl transition-shadow">
+
+        <div
+          class="absolute inset-x-0 top-0 h-1 rounded-t-xl
+                 bg-gradient-to-r from-primary to-accent"></div>
+
+
+        <div class="flex flex-col items-center gap-5 text-center">
+
+          <img
+            [src]="user()?.img_perfil ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
+            alt="Foto de perfil"
+            class="w-44 h-44 rounded-full object-cover
+                   ring-4 ring-primary/30 shadow-2xl"/>
+
+          <div class="space-y-2 flex flex-col gap-2">
+            <h2 class="text-3xl font-semibold text-text-primary tracking-tight">
+              {{ user()?.name }}
+            </h2>
+
+            <span
+              class="inline-block px-4 py-1 rounded-full
+                     bg-primary/20 text-primary text-sm">
+              {{ user()?.rol?.name }}
+            </span>
+
+            <p class="text-gray-400">
+              {{ user()?.email }}
+            </p>
+          </div>
+        </div>
+
       </div>
 
-      <button class="border border-gray-400 text-text-primary px-4 py-2 rounded-full hover:bg-accent/20 transition">
-        <i class="fa-regular fa-pen-to-square mr-2"></i> Editar
-      </button>
-    </div>
+      <!-- INFORMACIÓN PERSONAL -->
+      <div
+        class="relative h-full bg-secondary border border-tercery rounded-xl p-8
+               flex flex-col justify-between
+               shadow-md hover:shadow-xl transition-shadow">
 
-    <!-- Información personal -->
-    <div class="bg-secondary border border-tercery rounded-xl shadow-md p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold text-text-primary">Información Personal</h3>
-        <button
-          class="border border-gray-400 text-text-primary px-4 py-1 rounded-full hover:bg-accent/20 transition text-sm">
-          <i class="fa-regular fa-pen-to-square mr-2"></i> Editar
+        <div
+          class="absolute inset-x-0 top-0 h-1 rounded-t-xl
+                 bg-gradient-to-r from-primary to-accent"
+        ></div>
+
+        <div class="space-y-6">
+
+          <h3 class="text-2xl font-semibold text-text-primary">
+            Información Personal
+          </h3>
+
+          <div class="bg-background/50 rounded-xl p-6 space-y-5">
+
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-user text-primary/70 mt-1"></i>
+              <div>
+                <p class="text-sm text-gray-400">Nombre</p>
+                <p class="text-text-primary font-medium">
+                  {{ user()?.name }} {{ user()?.surname }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-envelope text-primary/70 mt-1"></i>
+              <div>
+                <p class="text-sm text-gray-400">Email</p>
+                <p class="text-text-primary font-medium">{{ user()?.email }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-phone text-primary/70 mt-1"></i>
+              <div>
+                <p class="text-sm text-gray-400">Teléfono</p>
+                <p class="italic text-text-primary">{{ user()?.phone || 'sin teléfono' }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-id-card text-primary/70 mt-1"></i>
+              <div>
+                <p class="text-sm text-gray-400">Bio</p>
+                <p class="italic text-text-primary">{{ user()?.bio || 'sin bio' }}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Boton -->
+        <button (click)="openModal()"
+          class="self-end border border-gray-400 text-text-primary
+                 px-6 py-2 rounded-full
+                 hover:bg-accent/20 transition cursor-pointer"
+        >
+          <i class="fa-regular fa-pen-to-square mr-2"></i>
+          Editar información
         </button>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-400">
-        <p><span class="font-semibold text-text-primary">Nombre:</span> Nombre</p>
-        <p><span class="font-semibold text-text-primary">Email:</span> Correo</p>
-        <p><span class="font-semibold text-text-primary">Teléfono:</span> Telefono</p>
-        <p><span class="font-semibold text-text-primary">Bio:</span> Bio</p>
-      </div>
-    </div>
-
-    <!-- Dirección -->
-    <div class="bg-secondary border border-tercery rounded-xl shadow-md p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold text-text-primary">Dirección</h3>
-        <button
-          class="border border-gray-400 text-text-primary px-4 py-1 rounded-full hover:bg-accent/20 transition text-sm">
-          <i class="fa-regular fa-pen-to-square mr-2"></i> Editar
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-400">
-        <p><span class="font-semibold text-text-primary">País:</span> Ciudad</p>
-        <p><span class="font-semibold text-text-primary">Ciudad:</span> Ciudad</p>
-        <p><span class="font-semibold text-text-primary">Código Postal:</span> ciudad</p>
-        <p><span class="font-semibold text-text-primary">RFC / TAX ID:</span> - </p>
-      </div>
     </div>
 
   </div>
 </div>
+
+
+@if (showEditModal) {
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+    <div class="relative bg-secondary border border-tercery rounded-xl w-full max-w-md transition-all">
+
+      <div class="absolute inset-x-0 top-0 h-1 rounded-t-xl bg-gradient-to-r from-primary to-accent"></div>
+
+      <div class="p-6 flex flex-col gap-4">
+
+        <h2 class="text-xl font-semibold text-text-primary text-center">Editar Información</h2>
+
+        <form [formGroup]="editForm" (ngSubmit)="submit()" class="space-y-4">
+
+          <div class="flex flex-col gap-2">
+              <label class="text-gray-400">Foto de perfil</label>
+
+
+              <div class="flex items-center flex-col gap-4">
+
+
+                <input id="imagen"
+                  type="file"
+                  accept="image/jpeg, image/png, image/webp"
+                  class="hidden"
+                  (change)="onFileSelected($event)"/>
+
+
+                <label for="imagen"
+                  class="flex items-center gap-3 px-4 py-2 bg-primary/10 border border-tercery rounded-xl cursor-pointer hover:bg-primary/5 transition">
+                  <i class="fa-solid fa-upload"></i>
+                  <span class="text-sm">Subir foto</span>
+                </label>
+
+                <span class="text-sm opacity-70">
+                  Formato: jpeg, png, webp — Máx 5MB
+                </span>
+              </div>
+
+          </div>
+
+          <div>
+            <label class="text-sm text-gray-400">Nombre</label>
+            <input type="text" formControlName="name"
+                  class="w-full border border-tercery rounded-xl px-3 py-2 bg-tercery/30 text-text-primary focus:ring-1 focus:ring-primary focus:border-primary transition"/>
+          </div>
+
+          <div>
+            <label class="text-sm text-gray-400">Apellido</label>
+            <input type="text" formControlName="surname"
+                  class="w-full border border-tercery rounded-xl px-3 py-2 bg-tercery/30 text-text-primary focus:ring-1 focus:ring-primary focus:border-primary transition"/>
+          </div>
+
+          <div>
+            <label class="text-sm text-gray-400">Teléfono</label>
+            <input type="text" formControlName="phone"
+                  class="w-full border border-tercery rounded-xl px-3 py-2 bg-tercery/30 text-text-primary focus:ring-1 focus:ring-primary focus:border-primary transition"/>
+          </div>
+
+          <div>
+            <label class="text-sm text-gray-400">Bio</label>
+            <textarea formControlName="bio"
+                      class="w-full border border-tercery rounded-xl px-3 py-2 bg-tercery/30 text-text-primary focus:ring-1 focus:ring-primary focus:border-primary transition"></textarea>
+          </div>
+
+          <div class="flex justify-end gap-2 mt-2">
+            <button type="button"
+                    (click)="closeModal()"
+                    class="px-4 py-2 border border-tercery rounded-full hover:bg-gray-200 transition cursor-pointer hover:text-black">Cancelar</button>
+
+            <button type="submit"
+                    class="px-4 py-2 bg-primary text-white rounded-full hover:bg-primary/80 transition cursor-pointer">Guardar</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  }
+}
+
+@if (alertVisible()) {
+<notifications-component [type]="alertType()"
+  (close)="alertVisible.set(false)"
+  [message]="alertMessage()" />
+}
+
+
+
+

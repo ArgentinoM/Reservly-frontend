@@ -1,9 +1,9 @@
-import { CurrencyPipe, CommonModule } from '@angular/common';
-import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { ApiResponse, ErrorResponse, MessageResponse } from '../../../core/interfaces/response.interface';
 import { FavoriteService } from '../../../customer/services/favorite-catalog.service';
 import { NotificationsComponent } from "../../components/notifications/notifications.component";
-import { ApiResponse, ErrorResponse, MessageResponse } from '../../../core/interfaces/response.interface';
 
 @Component({
   selector: 'catalog-list',
@@ -21,6 +21,7 @@ export class CatalogListComponent{
   ServiceDesc = input.required<string>();
   ServicePrice = input.required<number>();
   ServiceImgUrl = input.required<string>();
+  ServiceDuration = input.required<number>();
   RatingAverage = input<string | null>();
   RatingTotal = input.required<number>();
 

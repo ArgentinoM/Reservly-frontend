@@ -4,7 +4,10 @@ export interface User {
   id:      number;
   name:    string;
   surname: string;
-  img:     string|null;
+  img_perfil:  any|null;
   email:   string;
+  phone:   string|null;
+  bio:     string|null;
   rol:  Roles;
+  created_at: string;
 }

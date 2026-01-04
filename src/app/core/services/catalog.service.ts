@@ -3,11 +3,11 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Catalog } from '../../customer/interfaces/response-catalog.interface';
-import { CreateUpdateOptions } from '../interfaces/CreateUpdateOptions.interfaces';
+import { CreateOptions } from '../interfaces/CreateOptions.interfaces';
 import { ApiResponse, MessageResponse } from '../interfaces/response.interface';
 import { PaginateResponse } from '../interfaces/respose-paginate.interface';
 
-interface Options {
+interface OptionsFilter {
   page?: number;
   perPage?: number;
   category?: number;
@@ -18,8 +18,6 @@ interface Options {
   name?: string;
 }
 
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -29,61 +27,63 @@ export class CatalogService {
 
   private http = inject(HttpClient);
   private baseUrl = environment.url_base;
-  private getServicesEndpoint = environment.getServices_endpoint;
-  private storeServicesEndpoint = environment.storeServices_endpoint;
-  private updateServicesEndpoint = environment.updateServices_endpoint;
-  private deleteServicesEndpoint = environment.deleteServices_endpoint;
-
+  private servicesEndpoint = environment.services_endpoint;
   catalogCache = new Map<string, PaginateResponse<Catalog>>();
-  catalogByIdCache = new Map<string, ApiResponse<Catalog>>();
+  catalogByIdCache = new Map<number, Catalog>();
 
   total = computed(() =>
     this._totalServices()
   );
 
-
-  getServices(options: Options): Observable<PaginateResponse<Catalog>> {
+  getServices(options: OptionsFilter): Observable<PaginateResponse<Catalog>> {
     const { page = 1, perPage = 20, ...filters } = options;
 
-    const key = JSON.stringify({ page, perPage, ...filters });
+    const normalizedFilters = this.normalizeFilters(filters);
 
-    if (this.catalogCache.has(key)) {
-      return of(this.catalogCache.get(key)!);
+    const key = JSON.stringify({
+      page,
+      perPage,
+      ...normalizedFilters
+    });
+
+    const cached = this.catalogCache.get(key);
+    if (cached) {
+      return of(cached);
     }
 
     return this.http.get<PaginateResponse<Catalog>>(
-      `${this.baseUrl}/${this.getServicesEndpoint}`,
+      `${this.baseUrl}/${this.servicesEndpoint}`,
       {
-        params: Object.fromEntries(
-          Object.entries({
-            page,
-            perPage,
-            ...filters,
-          }).filter(([_, v]) => v !== null && v !== '' && v !== 0)
-        )
+        params: {
+          page,
+          perPage,
+          ...normalizedFilters
+        }
       }
     ).pipe(
       tap(resp => this._totalServices.set(resp.meta.total)),
       tap(resp => this.catalogCache.set(key, resp)),
     );
-}
-
+  }
 
   getServicesById(id: number): Observable<ApiResponse<Catalog>>{
 
-    const cached = this.catalogByIdCache.get(`${id}`);
+    const cached = this.catalogByIdCache.get(id);
 
-    if(cached){
-      return of(cached);
+    if (cached) {
+      return of({
+        message: 'Cached',
+        data: cached,
+      });
     }
 
-    return this.http.get<ApiResponse<Catalog>>(`${this.baseUrl}/${this.getServicesEndpoint}/${id}`)
+    return this.http.get<ApiResponse<Catalog>>(`${this.baseUrl}/${this.servicesEndpoint}/${id}`)
     .pipe(
-      tap(resp => this.catalogByIdCache.set(`${id}`, resp)),
+      tap(resp => this.catalogByIdCache.set(id, resp.data))
     )
   }
 
-  createService(options: CreateUpdateOptions): Observable<ApiResponse<Catalog>>{
+  createService(options: CreateOptions): Observable<ApiResponse<Catalog>>{
 
       const formData = new FormData();
       formData.append('name', options.name ?? '');
@@ -93,40 +93,84 @@ export class CatalogService {
       formData.append('category_id', String(options.category_id ?? 0));
       formData.append('img', options.img);
 
-    return this.http.post<ApiResponse<Catalog>>(`${this.baseUrl}/${this.storeServicesEndpoint}`, formData)
+    return this.http.post<ApiResponse<Catalog>>(`${this.baseUrl}/${this.servicesEndpoint}`, formData)
       .pipe(
-        tap((resp) => {
-          this.catalogCache.clear();
-          this._totalServices.update(service => service + 1);
-        })
+        tap(resp => this.createCatalogCache(resp.data))
       );
-
   }
 
-  updateService(id: number, options: CreateUpdateOptions | FormData): Observable<ApiResponse<Catalog>> {
+  updateService(id: number, options: Partial<CreateOptions> | FormData): Observable<ApiResponse<Catalog>> {
 
     return this.http.post<ApiResponse<Catalog>>(
-      `${this.baseUrl}/${this.updateServicesEndpoint}/${id}`,
+      `${this.baseUrl}/${this.servicesEndpoint}/${id}`,
       options
     ).pipe(
       tap(resp => console.log(resp)),
-      tap(() => {
-        this.catalogCache.clear();
-        this.catalogByIdCache.delete(`${id}`);
-      })
+      tap(resp => this.updateCatalogCache(resp.data))
     );
   }
 
 
   deleteService(id: number): Observable<MessageResponse> {
-    return this.http.delete<MessageResponse>(`${this.baseUrl}/${this.deleteServicesEndpoint}/${id}`)
-    .pipe(
-      tap(() => {
-        this.catalogCache.clear();
-        this.catalogByIdCache.delete(`${id}`);
-        this._totalServices.update(total => total - 1);
-      })
-    );
+    return this.http.delete<MessageResponse>(`${this.baseUrl}/${this.servicesEndpoint}/${id}`)
+      .pipe(
+        tap(() => this.deleteCatalogCache(id))
+      );
   }
 
+  private createCatalogCache(catalog: Catalog) {
+    const catalogId = catalog.id;
+
+    this.catalogByIdCache.set(catalogId, catalog);
+
+    this.catalogCache.forEach(catalogResponse => {
+
+      catalogResponse.data = [catalog, ...catalogResponse.data];
+
+      catalogResponse.meta.total += 1;
+    });
+
+    this._totalServices.update(v => v + 1);
+  }
+
+  private updateCatalogCache(catalog: Catalog) {
+
+    const catalogId = catalog.id;
+
+    this.catalogByIdCache.set(catalogId, catalog);
+
+    this.catalogCache.forEach(catalogResponse => {
+
+      catalogResponse.data = catalogResponse.data.map(
+        (currentCatalog) =>
+          currentCatalog.id === catalogId ? catalog : currentCatalog
+      )
+
+    })
+  }
+
+  private deleteCatalogCache(catalogId: number) {
+
+    this.catalogByIdCache.delete(catalogId);
+
+    this.catalogCache.forEach(catalogResponse => {
+
+      catalogResponse.data = catalogResponse.data.filter(
+        (currentCatalog) => currentCatalog.id !== catalogId
+      )
+
+    })
+  }
+
+  private normalizeFilters(filters: Record<string, any>): Record<string, any> {
+    return Object.keys(filters)
+      .sort()
+      .reduce((acc, key) => {
+        const value = filters[key];
+        if (value !== null && value !== '' && value !== 0 && value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, any>);
+  }
 }

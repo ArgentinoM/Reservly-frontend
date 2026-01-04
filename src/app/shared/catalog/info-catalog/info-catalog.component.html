@@ -50,8 +50,18 @@
         <div class=" h-full flex flex-col justify-between">
           <div class="flex items-center justify-between">
             <h1 class="text-4xl font-bold text-primary">{{catalogResource.value()?.data?.name}}</h1>
-            <i class="fa-heart fa-solid text-red-500 text-[1.7rem] cursor-pointer transition-all duration-300">
+
+
+            @if(router.url.includes('customer')) {
+            <i (click)="toggleFavorite()"
+             class="fa-heart text-[1.7rem] cursor-pointer transition-all duration-300"
+              [ngClass]="{
+                'fa-solid text-red-500 animate-heartbeat': isFavorite(),
+                'fa-regular text-text-primary hover:text-primary': !isFavorite()
+              }">
             </i>
+            }
+
           </div>
 
           <!-- Rating -->
@@ -116,7 +126,7 @@
       <div class="mb-4">
         <div class="flex items-start gap-4 bg-tercery p-4 rounded-xl shadow">
           <img
-            [src]="review.user.img ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
+            [src]="review.user.img_perfil ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
             alt="perfil"
             class="w-12 h-12 rounded-full object-cover">
           <div class="flex flex-col gap-1.5">
@@ -146,7 +156,7 @@
 
 @if (alertVisible()) {
   <notifications-component
-    [type]="alertType"
+    [type]="alertType()"
     [message]="alertMessage()"
     (close)="alertVisible.set(false); pendingDelete.set(false)"
     (confirm)="confirmDelete()"

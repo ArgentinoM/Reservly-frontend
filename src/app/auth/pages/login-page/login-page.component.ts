@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TitleAuthComponentComponent } from "../../components/title-auth-component/title-auth-component.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AlertsAuthComponent } from '../../components/alerts-auth/alerts-auth.component';
-import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
-import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { NotificationsComponent } from "../../../shared/components/notifications/notifications.component";
+import { TitleAuthComponentComponent } from "../../components/title-auth-component/title-auth-component.component";
+import { AuthService } from '../../services/auth.service';
+import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -14,7 +13,6 @@ import { NotificationsComponent } from "../../../shared/components/notifications
     TitleAuthComponentComponent,
     RouterLink,
     ReactiveFormsModule,
-    AlertsAuthComponent,
     NotificationsComponent
 ],
   templateUrl: './login-page.component.html',

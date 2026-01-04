@@ -1,20 +1,29 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { PaymentsData } from '../interfaces/paymentsData';
-import { ApiResponse } from '../interfaces/response.interface';
+import { PaymentIntentResponse, PaymentsData } from '../interfaces/paymentsData';
 
 @Injectable({providedIn: 'root'})
 
 export class PaymentsService {
   http =  inject(HttpClient);
   private baseUrl = environment.url_base
+  private paymentsEndpoint = environment.payments_endpoint;
 
-  createPaymentIntent(data: PaymentsData): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(
-      `${this.baseUrl}/payment_intent`,
+  private _clientSecret = signal<string>('');
+
+
+  clientSecret = computed(() => this._clientSecret());
+
+  createPaymentIntent(data: PaymentsData): Observable<PaymentIntentResponse> {
+    return this.http.post<PaymentIntentResponse>(
+      `${this.baseUrl}/${this.paymentsEndpoint}`,
       data
+    ).pipe(
+      tap(response => {
+        this._clientSecret.set(response.client_secret);
+      })
     );
   }
 

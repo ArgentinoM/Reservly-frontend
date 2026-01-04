@@ -17,7 +17,7 @@ export class ReviewService {
 
   private http = inject(HttpClient);
   private baseUrl =  environment.url_base;
-  private getReviewEndpoint = environment.getReviews_endpoint;
+  private reviewEndpoint = environment.reviews_endpoint;
 
   private reviewCache = new Map<string, PaginateResponse<Review>>()
 
@@ -37,7 +37,7 @@ export class ReviewService {
       return of(cached);
     }
 
-    return this.http.get<PaginateResponse<Review>>(`${this.baseUrl}/${this.getReviewEndpoint}/${service_id}`, {
+    return this.http.get<PaginateResponse<Review>>(`${this.baseUrl}/service/${service_id}/${this.reviewEndpoint}`, {
       params: {
         page,
         perPage

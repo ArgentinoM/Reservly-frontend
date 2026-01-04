@@ -24,10 +24,38 @@ export class CalendarComponent implements OnInit {
 
   today = new Date();
 
+  startTime = signal<string>('');
+  endTime = signal<string>('');
+  durationHours = signal(history.state.duration);
+  idService = signal(history.state.id);
+
   currentYear = signal(this.today.getFullYear());
   currentMonth = signal(this.today.getMonth());
   arrayDays = signal<(number | '')[]>([]);
-  selectedDay = signal<number | ''>('');
+  selectedDay = signal<Date | null>(null);
+  endDateTime = signal<Date | null>(null);
+
+  startDate = computed(() => {
+    if (!this.selectedDay() || !this.startTime()) return null;
+
+    const d = this.selectedDay()!;
+    return `${d.getFullYear()}-${(d.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${d.getDate()
+      .toString()
+      .padStart(2, '0')} ${this.startTime()}`;
+  });
+
+  endDate = computed(() => {
+    const end = this.endDateTime();
+    if (!end) return null;
+
+    return `${end.getFullYear()}-${(end.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${end.getDate()
+      .toString()
+      .padStart(2, '0')} ${this.endTime()}`;
+  });
 
 
   lastDay = computed(() =>
@@ -48,8 +76,44 @@ export class CalendarComponent implements OnInit {
     this.generateCalendar();
   }
 
-  selectDay(day : number | ''){
-    this.selectedDay.set(day);
+  selectDay(day: number | '') {
+    if (day === '') return;
+
+    const selected = new Date(
+      this.currentYear(),
+      this.currentMonth(),
+      day
+    );
+
+    this.selectedDay.set(selected);
+  }
+
+
+  onStartTimeChange(value: string) {
+    this.startTime.set(value);
+
+    if (!value || !this.selectedDay()) {
+      this.endTime.set('');
+      this.endDateTime.set(null);
+      return;
+    }
+
+    const [h, m] = value.split(':').map(Number);
+
+    const start = new Date(this.selectedDay()!);
+    start.setHours(h, m, 0, 0);
+
+    const end = new Date(start);
+    end.setHours(end.getHours() + this.durationHours());
+
+    this.endDateTime.set(end);
+
+    const endTime =
+      end.getHours().toString().padStart(2, '0') +
+      ':' +
+      end.getMinutes().toString().padStart(2, '0');
+
+    this.endTime.set(endTime);
   }
 
 
@@ -98,5 +162,17 @@ export class CalendarComponent implements OnInit {
       this.currentYear() === this.today.getFullYear()
     );
   }
+
+  formatTimeAMPM(time: string): string {
+    if (!time) return '--:--';
+
+    const [h, m] = time.split(':').map(Number);
+
+    const period = h >= 12 ? 'PM' : 'AM';
+    const hour12 = h % 12 || 12;
+
+    return `${hour12}:${m.toString().padStart(2, '0')} ${period}`;
+  }
+
 
 }

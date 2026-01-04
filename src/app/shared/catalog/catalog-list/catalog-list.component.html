@@ -61,7 +61,7 @@
         router.url.includes('services') ? [toSlug(ServiceName())] :
         router.url.includes('favorit') ? ['../services', toSlug(ServiceName())] :
         ['services', toSlug(ServiceName())]"
-        [state]="{ id: ServiceId() }"
+        [state]="{ id: ServiceId(), duration: ServiceDuration() }"
         class="bg-primary mt-1 cursor-pointer text-center text-text-primary py-1 rounded-md hover:bg-accent hover:text-gray-800 transition">
         Más info
       </a>

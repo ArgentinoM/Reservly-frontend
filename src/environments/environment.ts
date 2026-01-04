@@ -8,21 +8,23 @@ export const environment = {
   verifyCode_endpoint: 'auth/verify',
   login_endpoint: 'auth/login',
   logout_endpoint: 'auth/logout',
+  stripe_pk: 'pk_test_51SLzpdBnVjSuQRAIlKwI5w62gu6MsqHpaQh2MCKiEU7V0tsMdpF0SHxCmolBSpjwF8HyEwcG3iwutRoVTbTBMRyA00B03P4ihw',
+
+  // User
+  user_endpoint: 'users',
 
   //categories
   getCategories_endpoint: 'categories',
 
   // Services
-  getServices_endpoint: 'services',
-  storeServices_endpoint: 'serviceStore',
-  updateServices_endpoint: 'serviceUpdate',
-  deleteServices_endpoint: 'serviceDelete',
+  services_endpoint: 'services',
 
   // Favorite
-   getFavorite_endpoint: 'favoriteService',
-   storeFavorite_endpoint: 'favoriteStore',
-   deleteFavorite_endpoint: 'favoriteDelete',
+  favorite_endpoint: 'favorites',
 
   //Reviews
-  getReviews_endpoint: 'review',
+  reviews_endpoint: 'reviews',
+
+  // Payments
+  payments_endpoint: 'payment_intents',
 }

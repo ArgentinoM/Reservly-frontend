@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { catchError, map, Observable, of, shareReplay } from 'rxjs';
+import { catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ApiResponse } from '../../core/interfaces/response.interface';
 import { CatalogService } from '../../core/services/catalog.service';
 import { AuthResponse } from '../interfaces/auth-response';
 import { User } from '../interfaces/user';
@@ -13,6 +14,7 @@ const loginEndpoint =  environment.login_endpoint;
 const registerEndpoint =  environment.register_endpoint;
 const verifyEndpoint =  environment.verifyCode_endpoint;
 const logoutEndpoint =  environment.logout_endpoint;
+const userEndpoint =  environment.user_endpoint;
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +28,6 @@ export class AuthService {
   private catalogService = inject(CatalogService);
   private _checkStatusCache: { value: boolean; expiresAt: number } | null = null;
   private readonly CACHE_DURATION = 60 * 60 * 1000;
-
-
-
-  private caches = new Set<Map<any, any>>();
 
   checkStatusResource = rxResource({
     loader: () => this.checkStatus(),
@@ -117,6 +115,21 @@ export class AuthService {
     );
   }
 
+  updateUser(data: Partial<User>): Observable<ApiResponse<User>> {
+
+    const formData = new FormData();
+    formData.append('name', data.name!);
+    formData.append('surname', data.surname!);
+    formData.append('phone', data.phone || '');
+    formData.append('bio', data.bio || '');
+    formData.append('img_perfil', data.img_perfil || '');
+
+    return this.http.patch<ApiResponse<User>>(`${baseUrl}/${userEndpoint}`, formData)
+      .pipe(
+        tap(resp => this.updateCacheUser(resp.data))
+      );
+  }
+
 
   private clearCache(){
     this.catalogService.catalogCache.clear();
@@ -136,5 +149,9 @@ export class AuthService {
     this.logout();
 
     return of(false);
+  }
+
+  private updateCacheUser(user: User) {
+    this._user.set(user);
   }
 }

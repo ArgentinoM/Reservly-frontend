@@ -34,7 +34,13 @@
       <button
         class="p-2 sm:p-4 duration-300 cursor-pointer rounded-2xl hover:bg-primary disabled:cursor-no-drop disabled:opacity-50 text-sm sm:text-base"
         (click)="selectDay(item)"
-        [class.activate]="selectedDay() === item "
+        [class.activate]="
+          selectedDay() &&
+          item !== '' &&
+          selectedDay()!.getDate() === item &&
+          selectedDay()!.getMonth() === currentMonth() &&
+          selectedDay()!.getFullYear() === currentYear()
+        "
         [ngClass]="isToday(item) ? 'bg-secondary text-white' : ''"
         [disabled]="isPastDay(item)">
         {{ item }}
@@ -62,12 +68,16 @@
 
       <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full justify-center">
         <input type="time"
-          class="w-full sm:w-auto bg-secondary text-text-primary p-2 rounded-lg shadow-inner" />
+          #starTime
+          class="w-full cursor-pointer sm:w-auto bg-secondary text-text-primary p-2 rounded-lg shadow-inner"
+          (change)="onStartTimeChange(starTime.value)" />
 
         <span class="opacity-70 text-sm sm:text-base">a</span>
 
         <input type="time"
-          class="w-full sm:w-auto bg-secondary text-text-primary p-2 rounded-lg shadow-inner" />
+          disabled
+          class="w-full cursor-no-drop sm:w-auto bg-secondary/50 text-text-primary/50 p-2 rounded-lg shadow-inner"
+          [value]="endTime()"/>
       </div>
     </form>
 
@@ -80,9 +90,21 @@
       <div class="flex flex-col gap-2 text-text-primary opacity-90 w-full text-sm sm:text-base">
 
         <div class="flex justify-between">
-          <b>Fecha:</b>
-          @if (selectedDay() !== '') {
-          <p>{{selectedDay()}}-{{currentMonth() + 1 | date: 'MMMM'}}-{{currentYear()}}</p>
+          <b>Fecha de inicio:</b>
+          @if (selectedDay() !== null) {
+
+          <p>{{ selectedDay() | date:"dd-MMMM-yyyy" }}</p>
+          }@else{
+          <p>Día no definido</p>
+          }
+
+        </div>
+
+        <div class="flex justify-between">
+          <b>Fecha de termino:</b>
+          @if (selectedDay() !== null) {
+
+          <p>{{ endDate() | date:"dd-MMMM-yyyy"}} </p>
           }@else{
           <p>Día no definido</p>
           }
@@ -91,7 +113,13 @@
 
         <div class="flex justify-between">
           <b>Rango de horas:</b>
-          <p>12:00am - 14:00pm</p>
+
+          <p>
+            {{ formatTimeAMPM(startTime()) }}
+            -
+            {{ formatTimeAMPM(endTime()) }}
+          </p>
+
         </div>
       </div>
 
@@ -101,6 +129,7 @@
 
       <a
         [routerLink]="'/customer/payments'"
+        [state]="{ serviceId: idService(), startDate: startDate(), endDate: endDate() }"
         class="mt-4 sm:mt-5 w-full px-4 text-center sm:px-6 py-2 sm:py-3 cursor-pointer border border-primary rounded-xl font-semibold hover:bg-success/40 transition">
         Reservar ahora
       </a>

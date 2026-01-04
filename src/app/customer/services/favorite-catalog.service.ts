@@ -17,16 +17,14 @@ export class FavoriteService {
 
   private http = inject(HttpClient);
   private baseUrl = environment.url_base;
-  private getFavoriteEndpoint = environment.getFavorite_endpoint;
-  private storeFavoriteEndpoint = environment.storeFavorite_endpoint;
-  private deleteFavoriteEndpoint = environment.deleteFavorite_endpoint;
+  private favoriteEndpoint = environment.favorite_endpoint;
 
   private _totalFavorites = signal<number>(0);
 
   private favoriteCache = new Map<string, PaginateResponse<Favorite>>();
 
   total = computed(() => this._totalFavorites());
-   favoritesIds = signal<number[]>([]);
+  favoritesIds = signal<number[]>([]);
 
   getFavorites(options: OptionsPage): Observable<PaginateResponse<Favorite>> {
      const {
@@ -41,7 +39,7 @@ export class FavoriteService {
      }
 
     return this.http.get<PaginateResponse<Favorite>>(
-      `${this.baseUrl}/${this.getFavoriteEndpoint}`,
+      `${this.baseUrl}/${this.favoriteEndpoint}`,
       {
         params: {
           perPage,
@@ -59,7 +57,7 @@ export class FavoriteService {
   }
 
   storeFavorite(service_id: number): Observable<ApiResponse<Favorite>>{
-    return this.http.post<ApiResponse<Favorite>>(`${this.baseUrl}/${this.storeFavoriteEndpoint}`, {service_id}).pipe(
+    return this.http.post<ApiResponse<Favorite>>(`${this.baseUrl}/${this.favoriteEndpoint}`, {service_id}).pipe(
       tap((resp) => {
         const newFav = resp.data;
 
@@ -78,11 +76,12 @@ export class FavoriteService {
   }
 
   deleteFavorite(service_id: number): Observable<MessageResponse>{
-    return this.http.delete<MessageResponse>(`${this.baseUrl}/${this.deleteFavoriteEndpoint}/${service_id}`).pipe(
+    return this.http.delete<MessageResponse>(`${this.baseUrl}/${this.favoriteEndpoint}/${service_id}`).pipe(
       tap(() => {
         this.favoritesIds.update((ids) =>
           ids.filter((id) => id !== service_id)
-        );
+        ),
+        tap(() => this.deleteFavoriteCache(service_id));
 
 
         for (const [key, page] of this.favoriteCache.entries()) {
@@ -97,6 +96,16 @@ export class FavoriteService {
 
   isFavorite(serviceId: number): boolean {
     return this.favoritesIds().includes(serviceId);
+  }
+
+  private deleteFavoriteCache(catalogId: number) {
+
+    this.favoriteCache.forEach(favoriteResponse => {
+
+      favoriteResponse.data = favoriteResponse.data.filter(
+        (currentFavorite) => currentFavorite.id !== catalogId
+      )
+    })
   }
 
 }

@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TitleAuthComponentComponent } from "../../components/title-auth-component/title-auth-component.component";
-import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
 import { CommonModule } from '@angular/common';
-import { AlertsAuthComponent } from "../../components/alerts-auth/alerts-auth.component";
-import { AuthService } from '../../services/auth.service';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { NotificationsComponent } from "../../../shared/components/notifications/notifications.component";
+import { TitleAuthComponentComponent } from "../../components/title-auth-component/title-auth-component.component";
+import { AuthService } from '../../services/auth.service';
+import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
 
 @Component({
   selector: 'app-register-page',
@@ -15,7 +14,6 @@ import { NotificationsComponent } from "../../../shared/components/notifications
     RouterLink,
     ReactiveFormsModule,
     CommonModule,
-    AlertsAuthComponent,
     NotificationsComponent
 ],
   templateUrl: './register-page.component.html',
