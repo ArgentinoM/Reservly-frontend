@@ -1,3 +1,5 @@
+import { Reservations } from "./reservations.interface";
+
 export interface PaymentsData {
   service_id: number;
   start_date: string;
@@ -8,4 +10,5 @@ export interface PaymentsData {
 export interface PaymentIntentResponse {
   message: string;
   client_secret: string;
+  reservation: Reservations
 }

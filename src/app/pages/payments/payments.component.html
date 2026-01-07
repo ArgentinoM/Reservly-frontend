@@ -3,6 +3,7 @@
 }
 
 <section
+  [class.hidden]="isLoading()"
   class="min-h-screen flex flex-col items-center justify-center gap-8 px-4
          bg-gradient-to-br from-background via-background to-secondary/40">
 
@@ -68,3 +69,10 @@
   </button>
 
 </section>
+
+@if (alertVisible()) {
+<notifications-component [type]="alertType()"
+  (close)="alertVisible.set(false)"
+  [message]="alertMessage()" />
+}
+

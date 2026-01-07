@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { paymentExitGuard } from '../../core/guards/payment-exit';
 import { FavoriteServicesPageComponent } from '../../customer/pages/favorite-services-page/favorite-services-page.component';
 import { HomePageComponent } from '../../customer/pages/home-page/home-page.component';
 import { ListServicesPageComponent } from '../../customer/pages/list-services-page/list-services-page.component';
@@ -37,7 +38,8 @@ export const layoutCustomeRoutes: Routes = [
   },
   {
     path: 'payments',
-    component: PaymentsComponent
+    component: PaymentsComponent,
+    canDeactivate: [paymentExitGuard]
   }
 ];
 

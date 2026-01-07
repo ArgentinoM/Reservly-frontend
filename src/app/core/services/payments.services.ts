@@ -3,13 +3,17 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PaymentIntentResponse, PaymentsData } from '../interfaces/paymentsData';
+import { MessageResponse } from '../interfaces/response.interface';
+import { ReservationService } from './reservations.service';
 
 @Injectable({providedIn: 'root'})
 
 export class PaymentsService {
-  http =  inject(HttpClient);
+  private http =  inject(HttpClient);
+  private reservationService = inject(ReservationService);
   private baseUrl = environment.url_base
   private paymentsEndpoint = environment.payments_endpoint;
+  private reservationEndpoint = environment.reservation_endpoin;
 
   private _clientSecret = signal<string>('');
 
@@ -23,8 +27,27 @@ export class PaymentsService {
     ).pipe(
       tap(response => {
         this._clientSecret.set(response.client_secret);
+
+        const newReservation = response.reservation;
+
+        if(newReservation){
+          this.reservationService.addReservationToCache(newReservation);
+        }
       })
     );
   }
+
+  continuePayment(reservation_id: number): Observable<{ "client_secret": string }>{
+    return this.http.post<{ "client_secret": string }>(`${this.baseUrl}/${this.paymentsEndpoint}/${reservation_id}/continue`, {})
+  }
+
+  getReservationStatus(id: number): Observable<MessageResponse>{
+    return this.http.get<MessageResponse>(`${this.baseUrl}/${this.reservationEndpoint}/${id}/status`);
+  }
+
+  markReservationAsPaid(reservationId: number) {
+    this.reservationService.markAsPaidInCache(reservationId);
+  }
+
 
 }

@@ -148,11 +148,11 @@ export class InfoCatalogComponent {
       this.alertType.set('success');
 
       this.alertMessage.set(resp.message)
-    }
+  }
 
-    private handleError(resp : ErrorResponse){
+  private handleError(resp : ErrorResponse){
       this.alertVisible.set(true)
       this.alertType.set('error');
       this.alertMessage.set(resp.error)
-    }
+  }
 }
