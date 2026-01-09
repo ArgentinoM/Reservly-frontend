@@ -11,11 +11,10 @@ import { InfoByServiceComponent } from "../../../seller/pages/info-by-service/in
 import { NotificationsComponent } from "../../components/notifications/notifications.component";
 import { SpinerComponent } from "../../components/spiner/spiner.component";
 import { CalendarComponent } from "../components/calendar/calendar.component";
-import { ReviewsServiceComponent } from "../components/reviews-service/reviews-service.component";
 
 @Component({
   selector: 'app-info-catalog',
-  imports: [CommonModule, SpinerComponent, CurrencyPipe, CalendarComponent, RouterLink, NotificationsComponent, InfoByServiceComponent, ReviewsServiceComponent],
+  imports: [CommonModule, SpinerComponent, CurrencyPipe, CalendarComponent, RouterLink, NotificationsComponent, InfoByServiceComponent],
   templateUrl: './info-catalog.component.html',
 })
 export class InfoCatalogComponent {
