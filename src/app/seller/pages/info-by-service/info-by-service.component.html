@@ -1,0 +1,104 @@
+<!-- app-reservations.component.html -->
+<section class="w-full max-w-6xl mx-auto mt-10 p-6 bg-secondary rounded-3xl shadow-2xl">
+  <h2 class="text-2xl font-bold text-primary mb-6">Reservaciones</h2>
+
+  <!-- Desktop -->
+  <div class="hidden md:block overflow-x-auto rounded-xl border shadow">
+    <table class="min-w-full text-left border-collapse">
+      <thead class="bg-primary/10 text-text-primary">
+        <tr>
+          <th class="px-4 py-3 font-semibold">Cliente</th>
+          <th class="px-4 py-3 font-semibold">Fecha inicio</th>
+          <th class="px-4 py-3 font-semibold">Fecha termino</th>
+          <th class="px-4 py-3 font-semibold">Horario</th>
+          <th class="px-4 py-3 font-semibold text-center">Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (reservation of reservationResource.value()?.data; track reservation.id) {
+          <tr class="bg-tercery/50 hover:bg-tercery transition rounded-xl">
+            <td class="px-4 py-3 flex items-center gap-3">
+              <img
+                [src]="reservation.user.img_perfil ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
+                alt="Perfil"
+                class="w-10 h-10 rounded-full object-cover shadow"
+              />
+              <span>{{ reservation.user.name }} {{ reservation.user.surname }}</span>
+            </td>
+
+            <td class="px-4 py-3">{{ reservation.start_date | date:'dd/MM/yyyy' }}</td>
+            <td class="px-4 py-3">{{ reservation.end_date | date:'dd/MM/yyyy' }}</td>
+            <td class="px-4 py-3">
+              {{ reservation.start_date | date:'h:mm a' }} - {{ reservation.end_date | date:'h:mm a' }}
+            </td>
+            <td class="px-4 py-3 text-center">
+              <span
+                class="px-3 py-1 rounded-full text-xs font-semibold"
+                [ngClass]="{
+                  'bg-success/20 text-success': reservation.status === 'confirmado',
+                  'bg-warning/20 text-warning': reservation.status === 'pendiente',
+                  'bg-error/20 text-error': reservation.status === 'cancelado'
+                }"
+              >
+                {{ reservation.status }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (!minimal() && reservationResource.value()?.meta !== null && reservationResource.value()?.meta?.last_page !== 1) {
+    <div class="mt-6 md:mt-10 flex justify-center">
+      <app-pagination
+        [page]="reservationResource.value()?.meta?.last_page ?? 0"
+        [currenPage]="paginateService.currenPage()"
+      />
+    </div>
+  }
+
+  <div class="md:hidden space-y-4 mt-6">
+    @for (reservation of reservationResource.value()?.data; track reservation.id) {
+      <div class="bg-tercery rounded-xl p-4 shadow border">
+        <div class="flex gap-4">
+          <img
+            [src]="reservation.user.img_perfil ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
+            alt="Perfil"
+            class="w-14 h-14 rounded-full object-cover"
+          />
+          <div class="flex-1">
+            <h3 class="font-semibold text-base">{{ reservation.user.name }} {{ reservation.user.surname }}</h3>
+            <p class="text-sm text-text-secondary mt-1">
+              {{ reservation.start_date | date:'dd/MM/yyyy' }} - {{ reservation.end_date | date:'dd/MM/yyyy' }}
+            </p>
+            <p class="text-sm text-text-secondary mt-1">
+              {{ reservation.start_date | date:'h:mm a' }} - {{ reservation.end_date | date:'h:mm a' }}
+            </p>
+            <span
+              class="mt-2 inline-block px-3 py-1 rounded-full text-xs font-semibold"
+              [ngClass]="{
+                'bg-success/20 text-success': reservation.status === 'confirmado',
+                'bg-warning/20 text-warning': reservation.status === 'pendiente',
+                'bg-error/20 text-error': reservation.status === 'cancelado'
+              }"
+            >
+              {{ reservation.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (!minimal() && reservationResource.value()?.meta !== null && reservationResource.value()?.meta?.last_page !== 1){
+    <div class="mt-6 flex justify-center md:hidden">
+      <app-pagination
+        [page]="reservationResource.value()?.meta?.last_page ?? 0"
+        [currenPage]="paginateService.currenPage()"
+      />
+    </div>
+
+  }
+
+</section>

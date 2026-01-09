@@ -190,6 +190,11 @@ export class CreateUpdateServicesComponent {
     });
   }
 
+  get imgPerfilLabel(): string {
+    const file: File | null = this.FormActions?.get('img')?.value ?? null;
+    return file ? file.name : 'Subir foto';
+  }
+
 
   back(){
     this.location.back()

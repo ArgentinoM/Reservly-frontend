@@ -8,6 +8,7 @@
   <!-- list -->
   <div class="hidden md:block">
     @if (itemsMenu() !== null) {
+
     <nav class="flex gap-6">
 
       @for (item of itemsMenu(); track item.path) {
@@ -54,6 +55,7 @@
   @if (authService.authStatus() === 'authenticated') {
   <div class="relative "
     #dropdownContainer>
+
     <button (click)="toggleDropdown()"
       class="flex items-center gap-2 border cursor-pointer border-tercery rounded-full px-3 py-1 hover:shadow-2xl transition duration-300">
       <img
@@ -77,6 +79,7 @@
       </button>
 
       <div class="md:hidden">
+
         @for (item of itemsMenu(); track item.path) {
 
         <button [routerLink]="item.path"

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NavigateComponent } from "../../shared/components/navigate/navigate.component";
 import { RouterLink } from "@angular/router";
+import { NavigateComponent } from "../../shared/components/navigate/navigate.component";
 
 @Component({
   selector: 'app-home-page-global',

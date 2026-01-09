@@ -1,3 +1,4 @@
+import { User } from "../../auth/interfaces/user";
 import { Catalog } from "../../customer/interfaces/response-catalog.interface";
 
 export interface Reservations {
@@ -5,6 +6,6 @@ export interface Reservations {
   start_date:  Date;
   end_date:    Date;
   status:      string;
-  user_id:     number;
+  user:     User;
   service: Catalog;
 }

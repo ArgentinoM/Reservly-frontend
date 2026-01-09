@@ -19,6 +19,7 @@ const userEndpoint =  environment.user_endpoint;
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
   private _authStatus = signal<AuthStatus>('checking');
@@ -52,10 +53,8 @@ export class AuthService {
     return !!token;
   }
 
-  register(data: any): Observable<boolean> {
-    return this.http.post(`${baseUrl}/${registerEndpoint}`, data).pipe(
-      map(() => true),
-    );
+  register(data: any): Observable<ApiResponse<User>> {
+    return this.http.post<ApiResponse<User>>(`${baseUrl}/${registerEndpoint}`, data)
   }
 
   login(email: string, password: string): Observable<boolean> {

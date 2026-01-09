@@ -1,0 +1,136 @@
+<section class="w-full max-w-7xl mx-auto mt-10 p-6 bg-secondary rounded-3xl shadow-2xl">
+  <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-6">
+    Reservaciones de mis servicios
+  </h2>
+
+  <div class="hidden md:block overflow-x-auto rounded-xl border shadow">
+    <table class="min-w-full text-left border-collapse text-sm">
+      <thead class="bg-primary/10 text-text-primary uppercase text-xs font-semibold">
+        <tr>
+          <th class="px-6 py-4">Cliente</th>
+          <th class="px-6 py-4">Servicio</th>
+          <th class="px-6 py-4">Fecha</th>
+          <th class="px-6 py-4">Horario</th>
+          <th class="px-6 py-4 text-center">Estado</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y">
+        @for (reservation of reservationResource.value()?.data; track reservation.id) {
+          <tr class="hover:bg-tercery transition">
+
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <img
+                  [src]="reservation.user.img_perfil ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
+                  class="w-10 h-10 rounded-full object-cover shadow"
+                  alt="Cliente"
+                />
+                <span class="font-medium">
+                  {{ reservation.user.name }} {{ reservation.user.surname }}
+                </span>
+              </div>
+            </td>
+
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <img
+                  [src]="reservation.service.img"
+                  class="w-12 h-12 rounded-lg object-cover shadow"
+                  alt="Servicio"
+                />
+                <span class="font-medium">
+                  {{ reservation.service.name }}
+                </span>
+              </div>
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap">
+              {{ reservation.start_date | date:'dd MMM yyyy' }}
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap">
+              {{ reservation.start_date | date:'h:mm a' }} -
+              {{ reservation.end_date | date:'h:mm a' }}
+            </td>
+
+
+            <td class="px-6 py-4 text-center">
+              <span
+                class="px-3 py-1 rounded-full text-xs font-semibold"
+                [ngClass]="{
+                  'bg-success/20 text-success': reservation.status === 'confirmado',
+                  'bg-warning/20 text-warning': reservation.status === 'pendiente',
+                  'bg-error/20 text-error': reservation.status === 'cancelado'
+                }"
+              >
+                {{ reservation.status }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+
+<!-- Mobile -->
+  <div class="md:hidden space-y-4 mt-6">
+    @for (reservation of reservationResource.value()?.data; track reservation.id) {
+      <div class="bg-tercery rounded-xl p-4 shadow border">
+
+        <div class="flex items-center gap-3 mb-3">
+          <img
+            [src]="reservation.user.img_perfil ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg'"
+            class="w-12 h-12 rounded-full object-cover"
+            alt="Cliente"
+          />
+          <div>
+            <p class="font-semibold">
+              {{ reservation.user.name }} {{ reservation.user.surname }}
+            </p>
+            <p class="text-xs text-text-secondary">Cliente</p>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mb-3">
+          <img
+            [src]="reservation.service.img"
+            class="w-16 h-16 rounded-lg object-cover"
+            alt="Servicio"
+          />
+          <div class="flex-1">
+            <p class="font-semibold">{{ reservation.service.name }}</p>
+            <p class="text-sm text-text-secondary">
+              {{ reservation.start_date | date:'dd MMM yyyy' }}
+            </p>
+            <p class="text-sm text-text-secondary">
+              {{ reservation.start_date | date:'h:mm a' }} -
+              {{ reservation.end_date | date:'h:mm a' }}
+            </p>
+          </div>
+        </div>
+
+        <span
+          class="inline-block px-3 py-1 rounded-full text-xs font-semibold"
+          [ngClass]="{
+            'bg-success/20 text-success': reservation.status === 'confirmado',
+            'bg-warning/20 text-warning': reservation.status === 'pendiente',
+            'bg-error/20 text-error': reservation.status === 'cancelado'
+          }"
+        >
+          {{ reservation.status }}
+        </span>
+      </div>
+    }
+  </div>
+
+  @if (!minimal() && reservationResource.value()?.meta?.last_page !== 1) {
+    <div class="mt-8 flex justify-center">
+      <app-pagination
+        [page]="reservationResource.value()?.meta?.last_page ?? 0"
+        [currenPage]="paginateService.currenPage()"
+      />
+    </div>
+  }
+</section>

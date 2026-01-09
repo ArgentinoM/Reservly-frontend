@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { CreateUpdateServicesComponent } from '../../seller/pages/createUpdate-services/createUpdate-services.component';
 import { HomeSellerComponent } from '../../seller/pages/home-seller/home-seller.component';
+import { ReservationsSellerComponent } from '../../seller/pages/reservations-seller/reservations-seller.component';
 import { ServicesSellerComponent } from '../../seller/pages/services-seller/services-seller.component';
 import { InfoCatalogComponent } from '../../shared/catalog/info-catalog/info-catalog.component';
 import { LayoutSellerComponent } from './layout-seller.component';
@@ -31,6 +32,10 @@ export const layoutSellerRoutes: Routes = [
       {
         path: 'update-service/:id',
         component: CreateUpdateServicesComponent
+      },
+      {
+        path: 'reservations',
+        component: ReservationsSellerComponent
       }
     ]
   }

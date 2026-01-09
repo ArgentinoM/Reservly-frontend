@@ -1,4 +1,4 @@
-const url = 'https://reservly-backend-production.up.railway.app';
+const url = 'https://reservly.site/laravel';
 
 export const environment = {
   production: true,
@@ -29,5 +29,8 @@ export const environment = {
   payments_endpoint: 'payment_intents',
 
   // Reservations
-  reservation_endpoin: 'reservations'
+  reservation_endpoin: 'reservations',
+
+  // Dashboar seller
+  dashboard_endpoint: 'seller/dashboard'
 }

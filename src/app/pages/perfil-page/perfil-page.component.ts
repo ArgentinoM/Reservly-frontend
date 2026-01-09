@@ -85,6 +85,11 @@ export class PerfilPageComponent implements OnInit {
 
   }
 
+  get imgPerfilLabel(): string {
+    const file: File | null = this.editForm?.get('img_perfil')?.value ?? null;
+    return file ? file.name : 'Subir foto';
+  }
+
   goBack() {
     this.location.back();
   }

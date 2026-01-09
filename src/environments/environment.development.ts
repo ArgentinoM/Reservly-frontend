@@ -29,5 +29,8 @@ export const environment = {
   payments_endpoint: 'payment_intents',
 
   // Reservations
-  reservation_endpoin: 'reservations'
+  reservation_endpoin: 'reservations',
+
+  // Dashboar seller
+  dashboard_endpoint: 'seller/dashboard'
 }

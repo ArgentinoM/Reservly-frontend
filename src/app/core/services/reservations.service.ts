@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Reservations } from '../interfaces/reservations.interface';
@@ -21,6 +21,10 @@ export class ReservationService {
 
   private reservationCache = new Map<string, PaginateResponse<Reservations>>();
   private reservationByServiceCache = new Map<string, PaginateResponse<Reservations>>();
+
+  private _total = signal<number>(0);
+
+  totalSeller = computed(() => this._total);
 
   getReservations(options: Options): Observable<PaginateResponse<Reservations>>{
 
@@ -45,6 +49,7 @@ export class ReservationService {
     })
     .pipe(
       tap((resp) => this.reservationCache.set(key, resp)),
+      tap(({meta}) => this._total.set(meta.total))
     );
   }
 
@@ -57,13 +62,13 @@ export class ReservationService {
 
     const key = `${page}-${perPage}`;
 
-    const cached = this.reservationCache.get(key);
+    const cached = this.reservationByServiceCache.get(key);
 
     if (cached) {
       return of(cached);
     }
 
-    return this.http.get<PaginateResponse<Reservations>>(`${this.baseUrl}/${id_service}/${this.reservationEndpoint}`, {
+    return this.http.get<PaginateResponse<Reservations>>(`${this.baseUrl}/${this.reservationEndpoint}/${id_service}`, {
       params: {
         page,
         perPage
@@ -115,7 +120,7 @@ export class ReservationService {
   }
 
   markAsPaidInCache(reservationId: number) {
-  this.updateReservationStatusInCache(reservationId, 'confirmado');
+    this.updateReservationStatusInCache(reservationId, 'confirmado');
   }
 
 

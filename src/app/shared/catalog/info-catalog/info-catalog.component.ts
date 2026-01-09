@@ -7,13 +7,15 @@ import { ApiResponse, ErrorResponse, MessageResponse } from '../../../core/inter
 import { CatalogService } from '../../../core/services/catalog.service';
 import { ReviewService } from '../../../core/services/review.service';
 import { FavoriteService } from '../../../customer/services/favorite-catalog.service';
+import { InfoByServiceComponent } from "../../../seller/pages/info-by-service/info-by-service.component";
 import { NotificationsComponent } from "../../components/notifications/notifications.component";
 import { SpinerComponent } from "../../components/spiner/spiner.component";
 import { CalendarComponent } from "../components/calendar/calendar.component";
+import { ReviewsServiceComponent } from "../components/reviews-service/reviews-service.component";
 
 @Component({
   selector: 'app-info-catalog',
-  imports: [CommonModule,SpinerComponent, CurrencyPipe, CalendarComponent, RouterLink, NotificationsComponent],
+  imports: [CommonModule, SpinerComponent, CurrencyPipe, CalendarComponent, RouterLink, NotificationsComponent, InfoByServiceComponent, ReviewsServiceComponent],
   templateUrl: './info-catalog.component.html',
 })
 export class InfoCatalogComponent {

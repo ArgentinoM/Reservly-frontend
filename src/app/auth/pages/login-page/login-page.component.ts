@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,7 +14,8 @@ import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
     TitleAuthComponentComponent,
     RouterLink,
     ReactiveFormsModule,
-    NotificationsComponent
+    NotificationsComponent,
+    NgClass
 ],
   templateUrl: './login-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +34,7 @@ export class LoginPageComponent {
   alertType!: 'success' | 'error';
   alertMessage = signal('');
 
+  showPassword = signal(false);
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -61,6 +64,10 @@ export class LoginPageComponent {
     }
    });
 
+  }
+
+  toggleConfirmPassword(){
+    this.showPassword.update(v => !v)
   }
 
   private async redirectUser() {
@@ -93,7 +100,7 @@ export class LoginPageComponent {
 
     setTimeout(() =>
       this.alertVisible.set(false)
-    , 6000);
+    , 2000);
   }
 
   private pushError(message: string) {

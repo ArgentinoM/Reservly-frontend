@@ -67,11 +67,10 @@
                 <td class="px-6 py-4">
                   <div class="flex justify-center gap-3">
                       @if (item.status === 'confirmado') {
-                        <button
-                          [routerLink]="['/reservation', item.id]"
-                          class="px-4 py-2 rounded-md bg-primary hover:bg-primary/70 cursor-pointer text-white text-xs font-medium transition">
-                          Ver detalles
-                        </button>
+                        <span
+                          class="flex items-center gap-1 text-xs font-medium text-primary">
+                          Aprobada
+                        </span>
                       }
 
                       @if (item.status === 'pendiente') {
@@ -148,11 +147,10 @@
 
             <div class="flex gap-3 mt-4">
               @if (item.status === 'confirmado') {
-                <button
-                  [routerLink]="['/reservation', item.id]"
-                  class="px-4 py-2 rounded-md bg-primary hover:bg-primary/70 cursor-pointer text-white text-xs font-medium transition">
-                  Ver detalles
-                </button>
+                <span
+                  class="flex items-center gap-1 text-xs font-medium text-primary">
+                  Aprobada
+                </span>
               }
 
               @if (item.status === 'pendiente') {

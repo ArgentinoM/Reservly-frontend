@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { NotificationsComponent } from "../../../shared/components/notifications/notifications.component";
@@ -17,7 +17,6 @@ import { GetErrorsAuthService } from '../../services/getErrors-auth.service';
     NotificationsComponent
 ],
   templateUrl: './register-page.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPageComponent {
 
@@ -31,6 +30,10 @@ export class RegisterPageComponent {
   alertVisible = signal(false);
   alertType: 'success' | 'error' = 'success';
   alertMessage = signal('');
+
+  showPassword = signal(false);
+  showConfirmPassword = signal(false);
+
 
   registerForm: FormGroup = this.fb.group({
     role: ['user', [Validators.required]],
@@ -48,31 +51,17 @@ export class RegisterPageComponent {
     }
 
     const payload = this.registerForm.value;
+
     this.isPosting.set(true);
 
     this.authService.register(payload).subscribe({
       next: (resp) => {
-        this.isPosting.set(false);
-
-        if (resp) {
-          this.showAlert('success', 'Cuenta creada correctamente');
-
-          this.registerForm.reset({ role: 'user' });
-
-          setTimeout(() =>
-            this.router.navigateByUrl('/auth/login')
-          , 1200);
-
-        } else {
-          this.showAlert('error', 'No se pudo completar el registro');
-        }
+        this.showAlert('success', resp.message)
       },
-      error: (err: any) => {
-        this.isPosting.set(false);
-
-        this.showAlert('error', err.error);
+      error: ({error}) => {
+        this.showAlert('error', error)
       }
-    });
+    })
   }
 
   private showAlert(type: 'success' | 'error', message: string) {
@@ -83,6 +72,13 @@ export class RegisterPageComponent {
     setTimeout(() => this.alertVisible.set(false), 5000);
   }
 
+  toggleConfirmPassword() {
+    this.showConfirmPassword.update(v => !v);
+  }
+
+  togglePassword() {
+    this.showPassword.update(v => !v);
+  }
 
   private showFormError() {
     for (const field of Object.keys(this.registerForm.controls)) {
