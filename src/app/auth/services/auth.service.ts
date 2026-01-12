@@ -123,7 +123,7 @@ export class AuthService {
     formData.append('bio', data.bio || '');
     formData.append('img_perfil', data.img_perfil || '');
 
-    return this.http.patch<ApiResponse<User>>(`${baseUrl}/${userEndpoint}`, formData)
+    return this.http.post<ApiResponse<User>>(`${baseUrl}/${userEndpoint}`, formData)
       .pipe(
         tap(resp => this.updateCacheUser(resp.data))
       );

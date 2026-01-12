@@ -127,12 +127,15 @@
         *Llegar 5 minutos antes de la hora estimada*
       </p>
 
-      <a
+      <button
+        [disabled]="!startTime() || !selectedDay()"
         [routerLink]="'/customer/payments'"
         [state]="{ serviceId: idService(), startDate: startDate(), endDate: endDate() }"
-        class="mt-4 sm:mt-5 w-full px-4 text-center sm:px-6 py-2 sm:py-3 cursor-pointer border border-primary rounded-xl font-semibold hover:bg-success/40 transition">
+        class="mt-4 sm:mt-5 w-full px-4 text-center sm:px-6 py-2 sm:py-3 cursor-pointer border border-primary rounded-xl font-semibold hover:bg-success/40
+        transition-all  duration-[.5s]
+        disabled:cursor-no-drop disabled:hover:bg-transparent disabled:border-error">
         Reservar ahora
-      </a>
+      </button>
     </div>
 
   </div>
