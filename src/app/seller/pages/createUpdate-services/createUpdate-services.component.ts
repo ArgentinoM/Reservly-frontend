@@ -49,7 +49,7 @@ export class CreateUpdateServicesComponent {
 
   FormActions = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(50)]],
-    desc: ['', [Validators.required, Validators.maxLength(255)]],
+    desc: ['', [Validators.required, Validators.maxLength(1000)]],
     price: [0, [Validators.required, Validators.min(200)]],
     duration: [0, [Validators.required, Validators.max(24)]],
     category_id: [0, Validators.required],
